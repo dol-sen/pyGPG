@@ -75,7 +75,10 @@ class GnuPG(object):
         @rtype list: of options from gpg'''
         if not self._gpg_options or refetch:
             self._gpg_options = self._process_gpg('dump-options')
-        return self._gpg_options.output.split("\n")
+        opts = self._gpg_options.output.split("\n")
+        if only_usable:
+            return list(set(opts.difference(self.config.unsupported)))
+        return opts
 
     def version(self, refetch=False):
         '''Runs 'gpg --version'

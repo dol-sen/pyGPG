@@ -37,6 +37,7 @@ class GPGConfig(object):
         }
         self._options = ['--no-tty',
         ]
+        self.unsupported = set()
 
 
     def get_options(self):
