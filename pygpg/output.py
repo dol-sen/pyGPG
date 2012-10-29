@@ -19,17 +19,18 @@
 
 
 
-class GnuPGResult(object):
+class GPGResult(object):
     '''GnuPG process result handler'''
 
     def __init__(self, gpg, results):
-        self._gpg = gpg
+        self.gpg = gpg
         self.output = results[0]
         self.messages = results[1].split('\n')
         self._time = None
         self._signature = None
         self._key_id = None
         self._key_type = None
+        self._fingerprint = None
 
     @property
     def verified(self):
@@ -51,3 +52,6 @@ class GnuPGResult(object):
     def signature(self):
         pass
 
+    @property
+    def returncode(self):
+        return self.gpg.returncode
