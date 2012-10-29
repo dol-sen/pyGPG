@@ -37,7 +37,7 @@ class GPG(object):
         self._gpg_options = None
 
 
-    def _process_gpg(self, action, gpg_input=None, filepath=None):
+    def _process_gpg(self, action, gpg_input=None, filepath=None, _shell=True):
         '''Creates and opens the subprocess object
         @rtype GnuPGResult object
         '''
@@ -45,34 +45,36 @@ class GPG(object):
         gpg = None
         if gpg_input is not None:
             args = [self.config['gpg_command'],
-                    self.config[action],
                     self.config['gpg_defaults']]
             if self.config.task_options[action]:
                 args.append(self.config.task_options[action])
-            print "running gpg with: ", args
-            gpg = Popen(args, shell=False, stdin=PIPE,
-                stdout=PIPE, stderr=PIPE)
+            args.append(self.config[action])
+            # need to pass a string not a list or
+            # the status messages won't be ouput
+            cmd = ' '.join(args)
+            print "running gpg with: '%s'" % cmd
+            gpg = Popen(cmd, shell=_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             results = gpg.communicate(gpg_input)
         elif filepath is not None:
             pass
         return GPGResult(gpg, results)
 
-    def decrypt(self, gpg_input=None, filepath=None):
+    def decrypt(self, gpg_input=None, filepath=None, shell=True):
         '''Decrypts the gpg_input block passed in
         or the file found at filepath
 
         @rtype GnuPGResult object
         '''
-        return self._process_gpg('decrypt', gpg_input, filepath)
+        return self._process_gpg('decrypt', gpg_input, filepath, shell)
 
-    def verify(self, gpg_input=None, filepath=None):
-        return self._process_gpg('verify', gpg_input, filepath)
+    def verify(self, gpg_input=None, filepath=None, shell=True):
+        return self._process_gpg('verify', gpg_input, filepath, shell)
 
-    def sign(self, mode, gpg_input=None, filepath=None):
+    def sign(self, mode, gpg_input=None, filepath=None, shell=True):
         if mode not in self.config.sign_modes():
             return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
                 'mode passed in: %s\n' % mode)
-        return self._process_gpg(mode, gpg_input, filepath)
+        return self._process_gpg(mode, gpg_input, filepath, shell)
 
     @property
     def dump_options(self):

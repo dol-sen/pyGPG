@@ -32,10 +32,12 @@ class GPGConfig(object):
             'clearsign': '--clearsign',
             'detach-sign': '--detach-sign',
             'dump-options': '--dump-options',
+            'list-keys': '--list-keys',
+            'list-secret-keys': '--list-secret-keys',
             'no-tty': '--no-tty',
             'version': '--version',
             # defaults added to each gpg process run
-            'gpg_defaults': '--no-tty',
+            'gpg_defaults': '--status-fd 2 --no-tty',
             'only_usable': False,
             'refetch': False,
         }
@@ -48,7 +50,8 @@ class GPGConfig(object):
             'clearsign': '',
             'detach-sign': '',
             'dump-options': '',
-            'no-tty': '',
+            'list-keys': '--attribute-fd 2',
+            'list-secret-keys': '--attribute-fd 2',
             'version': '',
         }
         self.unsupported = set()
