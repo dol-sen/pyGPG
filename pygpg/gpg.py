@@ -68,9 +68,10 @@ class GPG(object):
     def verify(self, gpg_input=None, filepath=None):
         return self._process_gpg('verify', gpg_input, filepath)
 
-    def sign(self, gpg_input=None, filename=None, mode=None):
-        if not mode:
-            return GPGResult(None, '', 'pyGPG: Error, no mode signing passed in\n')
+    def sign(self, mode, gpg_input=None, filepath=None):
+        if mode not in self.config.sign_modes():
+            return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
+                'mode passed in: %s\n' % mode)
         return self._process_gpg(mode, gpg_input, filepath)
 
     @property
