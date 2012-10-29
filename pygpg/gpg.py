@@ -20,6 +20,7 @@ from __future__ import with_statement
 
 from subprocess import Popen, PIPE
 
+from pygpg.output import GPGResult
 
 
 class GnuPG(object):
