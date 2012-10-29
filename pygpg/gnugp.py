@@ -33,38 +33,38 @@ class GnuPG(object):
         self._gpg_version = None
 
 
-    def _process_gpg(self, action, message, filepath):
+    def _process_gpg(self, action, gpg_input, filepath):
         '''Creates and opens the subprocess object
         @rtype GnuPGResult object
         '''
         results = ('', '') # null
-        if message:
+        if gpg_input:
             args = [self.config['gpg_command'],
                     self.config[action],
                     self.config.get_options()
                 ]
             gpg = Popen(args, shell=False, stdin=PIPE,
                 stdout=PIPE, stderr=PIPE)
-            results = gpg.communicate(message)
+            results = gpg.communicate(gpg_input)
         elif filepath:
             pass
         return GnuPGResult(results)
 
-    def decrypt(self, message=None, filepath=None):
-        '''Decrypts the message block passed in
+    def decrypt(self, gpg_input=None, filepath=None):
+        '''Decrypts the gpg_input block passed in
         or the file found at filepath
 
         @rtype GnuPGResult object
         '''
-        return self._process_gpg('decrypt', message, filepath)
+        return self._process_gpg('decrypt', gpg_input, filepath)
 
-    def verify(self, message=None, filename=None):
-        return self._process_gpg('verify', message, filepath)
+    def verify(self, gpg_input=None, filename=None):
+        return self._process_gpg('verify', gpg_input, filepath)
 
-    def sign(self, message=None, filename=None, mode=None):
+    def sign(self, gpg_input=None, filename=None, mode=None):
         if not mode:
             return GnuPGResult('', 'pyGPG: Error, no mode signing passed in\n')
-        return self._process_gpg(mode, message, filepath)
+        return self._process_gpg(mode, gpg_input, filepath)
 
     def dump_options(self, only_usable=False, refetch=False):
         '''Runs 'gpg --dump-options'
