@@ -24,7 +24,7 @@ class GPGConfig(object):
     for running the GnuPG class'''
 
     def __init__(self):
-        self._defaults = {
+        self.defaults = {
             'gpg_command': '/usr/bin/gpg',
             'decrypt': '--decrypt',
             'verify': '--verify',
@@ -35,7 +35,7 @@ class GPGConfig(object):
             'no-tty': '--no-tty',
             'version': '--version',
         }
-        self._options = ['--no-tty',
+        self.options = ['--no-tty',
         ]
         self.unsupported = set()
 
@@ -44,20 +44,20 @@ class GPGConfig(object):
         '''Returns the list of default options to be applied to
         all gpg runs except the GnuPG.custom_run()
         '''
-        return self._options.copy()
+        return self.options
 
 
     def get_defaults(self):
         '''Returns a dictionary of the default settings
         '''
-        return self._defaults.copy()
+        return self.defaults.copy()
 
 
     def set_options(self, options):
         '''Sets the options to the value passed in
         @param options: list
         '''
-        self._options = options.copy()
+        self.options = options.copy()
 
 
     def sign_modes(self, gpg_options=None):
