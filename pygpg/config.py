@@ -24,40 +24,53 @@ class GPGConfig(object):
     for running the GnuPG class'''
 
     def __init__(self):
-        self.defaults = {
+        self._defaults = {
             'gpg_command': '/usr/bin/gpg',
             'decrypt': '--decrypt',
             'verify': '--verify',
             'sign': '--sign',
             'clearsign': '--clearsign',
             'detach-sign': '--detach-sign',
-            'dump-otions': '--dump-options',
+            'dump-options': '--dump-options',
             'no-tty': '--no-tty',
             'version': '--version',
+            # defaults added to each gpg process run
+            'gpg_defaults': '--no-tty',
+            'only_usable': False,
+            'refetch': False,
         }
-        self.options = ['--no-tty',
-        ]
+        self.options = {
+        }
+        self.task_options = {
+            'decrypt': '',
+            'verify': '',
+            'sign': '',
+            'clearsign': '',
+            'detach-sign': '',
+            'dump-options': '',
+            'no-tty': '',
+            'version': '',
+        }
         self.unsupported = set()
 
 
-    def get_options(self):
-        '''Returns the list of default options to be applied to
-        all gpg runs except the GnuPG.custom_run()
-        '''
-        return self.options
+    def __getitem__(self, key):
+        return self._get_(key)
+
+
+    def _get_(self, key):
+        if (key in self.options
+            and not self.options[key] is None):
+            return self.options[key]
+        if key in self._defaults:
+            return self._defaults[key]
+        return None
 
 
     def get_defaults(self):
         '''Returns a dictionary of the default settings
         '''
-        return self.defaults.copy()
-
-
-    def set_options(self, options):
-        '''Sets the options to the value passed in
-        @param options: list
-        '''
-        self.options = options.copy()
+        return self._defaults.copy()
 
 
     def sign_modes(self, gpg_options=None):
@@ -71,5 +84,4 @@ class GPGConfig(object):
         if gpg_options:
             return list(set(supported).intersection(set(gpg_options)))
         return supported
-
 
