@@ -24,6 +24,9 @@ from subprocess import Popen, PIPE
 #from pygpg import output
 from pygpg.output import GPGResult
 
+# live testing cmds.
+# import pygpg;from pygpg.config import GPGConfig;from pygpg.gpg import GPG;c=GPGConfig();gpg=GPG(c);v=gpg.version;asc=open('/home/brian/layman-test/repositories.xml.asc', 'r').read();d=gpg.decrypt(gpg_input=asc);pl=open('/home/brian/layman-test/installed.xml', 'r').read();s=gpg.sign('clearsign', gpg_input=pl)
+
 
 class GPG(object):
     '''Subprocess gnupg handler class'''
@@ -35,6 +38,7 @@ class GPG(object):
         self.config = config
         self._gpg_version = None
         self._gpg_options = None
+        self.history = []
 
 
     def _process_gpg(self, action, gpg_input=None, filepath=None, _shell=True):
@@ -52,7 +56,7 @@ class GPG(object):
             # need to pass a string not a list or
             # the status messages won't be ouput
             cmd = ' '.join(args)
-            print "running gpg with: '%s'" % cmd
+            self.history.append("Running gpg with: '%s'" % cmd)
             gpg = Popen(cmd, shell=_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE)
             results = gpg.communicate(gpg_input)
         elif filepath is not None:
