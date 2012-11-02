@@ -18,7 +18,9 @@
 '''Handles pyGPG's gpg status output.'''
 
 
-from pygpg.legend import LEGEND, IDENTIFIER
+from pygpg import legend
+from pygpg.legend import IDENTIFIER
+
 
 class Status(object):
     '''Decodes all status messages and
@@ -28,7 +30,7 @@ class Status(object):
     def __init__(self):
         self.messages = []
         self.status_msgs = []
-        self.data = {'msgs':set()}
+        self.data = []
         self.errors = []
 
 
@@ -36,40 +38,45 @@ class Status(object):
         stderr_msgs = []
         self.messages = messages
         for msg in messages:
-            if msg.startswith(IDENTIFIER):
+            if self._is_status_msg(msg):
                 self.status_msgs.append(msg)
-                #print 'msg',msg
-                # split it into parts, discard the IDENTIFIER
-                parts = msg.split()[1:]
-                #print 'parts', parts
+                # split it into [IDENTIFIER, key, data] parts
+                # discard the IDENTIFIER
+                # we are not yet spliting the actual data
+                parts = msg.split(' ', 2)[1:]
                 key = parts.pop(0)
                 try:
-                    status = LEGEND[key]
-                except KeyError:
+                    status = getattr(legend, key)
+                except AttributeError:
+                    self.errors.append("ERROR getting status class %s" % key)
                     continue
-                for v in status['data']:
-                    if v.startswith('['):
-                        # strip the optional data indicator
-                        v = v[1:-1]
-                        optional = True
-                    else:
-                        optional = False
-                    # now add the key to the variable name to keep them
-                    # from overwriting others of the same name,
-                    # but possibly different info
-                    var_name = '-'.join([key.lower(), v])
-                    if parts:
-                        self.data[var_name] = parts.pop(0)
-                    elif not optional:
-                        error = "Missing status data: %s" % var_name
-                        self.errors.append("ERROR in data: %s\n<<%s>>\n'"
-                            % (error, msg))
-                    if status['msg']:
-                        self.data['msgs'].add('%s, %s' % (key,status['msg']))
+                # need to handle <username> fields that would split
+                # into many parts instead of just the one
+                num_fields = len(status._fields)
+                if num_fields != len(parts):
+                    #print 'field parts', parts
+                    if parts is not [] and len(parts) == 1:
+                        parts = parts[0].split(' ', num_fields -1)
+                    missing = num_fields - len(parts)
+                    #print num_fields,missing, 'parts', parts
+                    while missing > 0:
+                        parts.append(None)
+                        missing -= 1
+                    if missing < 0:  # uh-oh too much info
+                        self.errors.append(
+                            "Found unexpected data for %s, fields=%s, data=%s"
+                            %( key, str(status._fields), str(parts)))
+                        self.errors.append(key + ' ' + str(parts[missing:]))
+                        # it's been logged, so trim off the extra
+                        # to prevent a traceback
+                        parts = parts[:missing]
+                self.data.append(status._make(parts))
             else:
                 stderr_msgs.append(msg)
         return stderr_msgs
 
-
+    @staticmethod
+    def _is_status_msg(msg):
+        return IDENTIFIER in msg
 
 

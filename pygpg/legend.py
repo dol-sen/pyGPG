@@ -18,224 +18,278 @@
 '''Holds pyGPG's gpg status output legend.'''
 
 
+from collections import namedtuple
+
+
 # make this global, so is easy to change, and calculates only once
 IDENTIFIER = '[GNUPG:] '
 ID_LEN = len(IDENTIFIER)
 
-LEGEND = {
-    'NEWSIG': {
-        'data':[],
-        'msg':"Issued right before a signature verification starts."},
-    'GOODSIG': {
-        'data':['long-keyid', 'username'],
-        'msg':"The signature with the keyid is good."},
-    'EXPSIG': {
-        'data':['long-keyid', 'username'],
-        'msg':"The signature with the keyid is good, but the signature is expired."},
-    'EXPKEYSIG': {
-        'data':['long-keyid', 'username'],
-        'msg':"The signature with the keyid is good, but the signature was made by an expired key."},
-    'REVKEYSIG': {
-        'data':['long-keyid', 'username'],
-        'msg':"The signature with the keyid is good, but the signature was made by a revoked key."},
-    'BADSIG': {
-        'data':['long-keyid', 'username'],
-        'msg':"The signature with the keyid has not been verified okay."},
-    'ERRSIG':  {
-        'data':['long-keyid', 'pubkey_algo', 'hash_algo'
-            'sig_class', 'timestamp', 'rc'],
-        'msg':"It was not possible to check the signature."},
-    'VALIDSIG': {
-        'data':['fingerprint', 'sig_creation_date', 'sig-timestamp',
-            'expire-timestamp',  'sig-version', 'reserved', 'pubkey-algo',
-            'hash-algo', 'sig-class','[primary-key-fpr]'],
-        'msg':"The signature with the keyid is good."},
-    'SIG_ID':{
-        'data':['radix64_string',  'sig_creation_date',  'sig-timestamp'],
-        'msg':"This is emitted only for signatures of class 0 or 1 which have been verified okay."},
-    'ENC_TO': {
-        'data':['long-keyid',  'keytype',  'keylength'],
-        'msg':"The message is encrypted to this LONG_KEYID."},
-    'NODATA': {
-        'data':['what'],
-        'msg':"""No data has been found. Codes for what are:
-        1 - No armored data.
-        2 - Expected a packet but did not found one.
-        3 - Invalid packet found, this may indicate a non OpenPGP
-                message.
-            4 - signature expected but not found
-    You may see more than one of these status lines."""},
+class NEWSIG(namedtuple('NEWSIG', '')):
+    msg = "Issued right before a signature verification starts."
+    __slots__ = ()
 
-    'UNEXPECTED': {
-        'data':['what'],
-        'msg':"Unexpected data has been encountered, 0 - not further specified"},
-    'TRUST_UNDEFINED': {
-        'data':['error-token'],
-        'msg':[]},
-    'TRUST_NEVER': {
-        'data':['error-token'],
-        'msg':"For good signatures, this indicates the validity of the key used to create the signature."},
-    'TRUST_MARGINAL': {
-        'data':[ '[0]','[validation_model]'],
-        'msg':"For good signatures, this indicates the validity of the key used to create the signature."},
-    'TRUST_FULLY': {
-        'data':['[0]', '[validation_model]'],
-        'msg':"For good signatures, this indicates the validity of the key used to create the signature."},
-    'TRUST_ULTIMATE': {
-        'data':['[0]','[validation_model]'],
-        'msg':"For good signatures, this indicates the validity of the key used to create the signature."},
-    'PKA_TRUST_GOOD': {
-        'data':['mailbox'],
-        'msg':"A status code emitted in addition to a TRUST_* status."},
-    'PKA_TRUST_BAD': {
-        'data':[ 'mailbox'],
-        'msg':"A status code emitted in addition to a TRUST_* status."},
-    'SIGEXPIRED': {
-        'data':[],
-        'msg':"This is deprecated in favor of KEYEXPIRED."},
-    'KEYEXPIRED': {
-        'data':['expire-timestamp'],
-        'msg':"The key has expired.  expire-timestamp is the expiration time in seconds since Epoch."},
-    'KEYREVOKED': {
-        'data':[],
-        'msg':"The used key has been revoked by its owner."},
-    'BADARMOR': {
-        'data':[],
-        'msg':"The ASCII armor is corrupted."},
-    'RSA_OR_IDEA': {
-        'data':[],
-        'msg':"The IDEA algorithms has been used in the data."},
-    'SHM_INFO': {
-        'data':[],
-        'msg':""},
-    'SHM_GET': {
-        'data':[],
-        'msg':""},
-    'SHM_GET_BOOL': {
-        'data':[],
-        'msg':""},
-    'SHM_GET_HIDDEN': {
-        'data':[],
-        'msg':""},
-    'GET_BOOL': {
-        'data':[],
-        'msg':""},
-    'GET_LINE': {
-        'data':[],
-        'msg':""},
-    'GET_HIDDEN': {
-        'data':[],
-        'msg':""},
-    'GOT_IT': {
-        'data':[],
-        'msg':""},
-    'NEED_PASSPHRASE': {
-        'data':['long-main-keyid', 'long-keyid', 'keytype', 'keylength'],
-        'msg':"Issued whenever a passphrase is needed."},
-    'NEED_PASSPHRASE_SYM': {
-        'data':['cipher_algo', 's2k_mode', 's2k_hash'],
-        'msg':"Issued whenever a passphrase for symmetric encryption is needed."},
-    'NEED_PASSPHRASE_PIN': {
-        'data':['card_type', 'chvno', 'serialno',],
-        'msg':"Issued whenever a PIN is requested to unlock a card."},
-    'MISSING_PASSPHRASE': {
-        'data':[],
-        'msg':"No passphrase was supplied."},
-    'BAD_PASSPHRASE': {
-        'data':['long-keyid'],
-        'msg':"The supplied passphrase was wrong or not given."},
-    'GOOD_PASSPHRASE': {
-        'data':[],
-        'msg':"The supplied passphrase was good and the secret key material is therefore usable."},
-    'DECRYPTION_FAILED': {
-        'data':[],
-        'msg':"The symmetric decryption failed - one reason could be a wrong passphrase for a symmetrical encrypted message."},
-    'DECRYPTION_OKAY': {
-        'data':[],
-        'msg':"The decryption process succeeded."},
-    'NO_PUBKEY': {
-        'data':['long-keyid'],
-        'msg':"The key is not available"},
-    'NO_SECKEY': {
-        'data':[  'long-keyid',],
-        'msg':"The key is not available"},
-    'IMPORT_CHECK': {
-        'data':['long-keyid', 'fingerprint', 'user-ID'],
-        'msg':'This status is emitted in interactive mode right before the "import.okay" prompt.'},
-    'IMPORTED': {
-        'data':['long-keyid', 'username'],
-        'msg':"The keyid and name of the signature just imported"},
-    'IMPORT_OK': {
-        'data':[  'reason', ['fingerprint',]],
-        'msg':"""The key with the primary key's FINGERPRINT has been imported.
-        Reason flags:
-          0 := Not actually changed
-          1 := Entirely new key.
-          2 := New user IDs
-          4 := New signatures
-          8 := New subkeys
-         16 := Contains private key.
-        The flags may be ORed."""},
+class GOODSIG(namedtuple('GOODSIG', ['long_keyid', 'username'])):
+    msg = "The signature with the keyid is good."
+    __slots__ = ()
 
-    'IMPORT_PROBLEM': {
-        'data':['reason', '[fingerprint]'],
-        'msg':"""Issued for each import failure.  Reason codes are:
-          0 := "No specific reason given".
-          1 := "Invalid Certificate".
-          2 := "Issuer Certificate missing".
-          3 := "Certificate Chain too long".
-          4 := "Error storing certificate"."""},
+class EXPSIG(namedtuple('EXPSIG', ['long_keyid', 'username'])):
+    msg = "The signature with the keyid is good, but the signature is expired."
+    __slots__ = ()
 
-    'IMPORT_RES': {
-        'data':['count', 'no_user_id', 'imported', 'imported_rsa', 'unchanged',
-            'n_uids', 'n_subk', 'n_sigs', 'n_revoc', 'sec_read', 'sec_imported',
-        'sec_dups', 'skipped_new_keys', 'not_imported'],
-        'msg':"Final statistics on import process."},
-    'FILE_START': {
-        'data':['what', 'filename'],
-        'msg':
+class EXPKEYSIG(namedtuple('EXPKEYSIG', ['long_keyid', 'username'])):
+    msg = "The signature with the keyid is good, but the signature was made by an expired key."
+    __slots__ = ()
+
+class REVKEYSIG(namedtuple('REVKEYSIG', ['long_keyid', 'username'])):
+    msg = "The signature with the keyid is good, but the signature was made by a revoked key."
+    __slots__ = ()
+
+class BADSIG(namedtuple('BADSIG', ['long_keyid', 'username'])):
+    msg = "The signature with the keyid has not been verified okay."
+    __slots__ = ()
+
+class ERRSIG(namedtuple('ERRSIG', ['long_keyid', 'pubkey_algo', 'hash_algo'
+            'sig_class', 'timestamp', 'rc'])):
+    msg = "It was not possible to check the signature."
+    __slots__ = ()
+
+class VALIDSIG(namedtuple('VALIDSIG', ['fingerprint', 'sig_creation_date', 'sig_timestamp',
+            'expire_timestamp',  'sig_version', 'reserved', 'pubkey_algo',
+            'hash_algo', 'sig_class','primary_key_fpr'])):
+    msg = "The signature with the keyid is good."
+    __slots__ = ()
+
+class SIG_ID(namedtuple('SIG_ID', ['radix64_string', 'sig_creation_date', 'sig_timestamp'])):
+    msg = "This is emitted only for signatures of class 0 or 1 which have been verified okay."
+    __slots__ = ()
+
+class ENC_TO(namedtuple('ENC_TO', ['long_keyid', 'keytype', 'keylength'])):
+    msg = "The message is encrypted to this LONG_KEYID."
+    __slots__ = ()
+
+class NODATA(namedtuple('NODATA', 'what')):
+    msg = \
+"""No data has been found. Codes for what are:
+    1 - No armored data.
+    2 - Expected a packet but did not found one.
+    3 - Invalid packet found, this may indicate a non OpenPGP
+            message.
+    4 - signature expected but not found
+You may see more than one of these status lines."""
+    __slots__ = ()
+
+class UNEXPECTED(namedtuple('UNEXPECTED', 'what')):
+    msg = "Unexpected data has been encountered, 0 - not further specified"
+    __slots__ = ()
+
+class TRUST_UNDEFINED(namedtuple('TRUST_UNDEFINED', 'error_token')):
+    msg = ""
+    __slots__ = ()
+
+class TRUST_NEVER(namedtuple('TRUST_NEVER', 'error_token')):
+    msg = "For good signatures, this indicates the validity of the key used to create the signature."
+    __slots__ = ()
+
+class TRUST_MARGINAL(namedtuple('TRUST_MARGINAL', 'validation_model')):
+    msg = "For good signatures, this indicates the validity of the key used to create the signature."
+    __slots__ = ()
+
+class TRUST_FULLY(namedtuple( 'TRUST_FULLY', 'validation_model')):
+    msg = "For good signatures, this indicates the validity of the key used to create the signature."
+    __slots__ = ()
+
+class TRUST_ULTIMATE(namedtuple('TRUST_ULTIMATE', 'validation_model')):
+    msg = "For good signatures, this indicates the validity of the key used to create the signature."
+    __slots__ = ()
+
+class PKA_TRUST_GOOD(namedtuple('PKA_TRUST_GOOD', 'mailbox')):
+    msg = "A status code emitted in addition to a TRUST_* status."
+    __slots__ = ()
+
+class PKA_TRUST_BAD(namedtuple('PKA_TRUST_BAD', 'mailbox')):
+    msg = "A status code emitted in addition to a TRUST_* status."
+    __slots__ = ()
+
+class SIGEXPIRED(namedtuple('SIGEXPIRED', '')):
+    msg = "This is deprecated in favor of KEYEXPIRED."
+    __slots__ = ()
+
+class KEYEXPIRED(namedtuple('KEYEXPIRED', 'expire_timestamp')):
+    msg = "The key has expired.  expire_timestamp is the expiration time in seconds since Epoch."
+    __slots__ = ()
+
+class KEYREVOKED(namedtuple('KEYREVOKED', '')):
+    msg = "The used key has been revoked by its owner."
+    __slots__ = ()
+
+class BADARMOR(namedtuple('BADARMOR', '')):
+    msg = "The ASCII armor is corrupted."
+    __slots__ = ()
+
+class RSA_OR_IDEA(namedtuple('RSA_OR_IDEA', '')):
+    msg = "The IDEA algorithms has been used in the data."
+    __slots__ = ()
+
+class SHM_INFO(namedtuple('SHM_INFO', '')):
+    msg = ""
+    __slots__ = ()
+
+class SHM_GET(namedtuple('SHM_GET', '')):
+    msg = ""
+    __slots__ = ()
+
+class SHM_GET_BOOL(namedtuple('SHM_GET_BOOL', '')):
+    msg = ""
+    __slots__ = ()
+
+class SHM_GET_HIDDEN(namedtuple('SHM_GET_HIDDEN', '')):
+    msg = ""
+    __slots__ = ()
+
+class GET_BOOL(namedtuple('GET_BOOL', '')):
+    msg = ""
+    __slots__ = ()
+
+class GET_LINE(namedtuple('GET_LINE', '')):
+    msg = ""
+    __slots__ = ()
+
+class GET_HIDDEN(namedtuple('GET_HIDDEN', '')):
+    msg = ""
+    __slots__ = ()
+
+class GOT_IT(namedtuple('GOT_IT', '')):
+    msg = ""
+    __slots__ = ()
+
+class NEED_PASSPHRASE(namedtuple('NEED_PASSPHRASE', ['long_main_keyid',
+                                'long_keyid', 'keytype', 'keylength'])):
+    msg = "Issued whenever a passphrase is needed."
+    __slots__ = ()
+
+class NEED_PASSPHRASE_SYM(namedtuple('NEED_PASSPHRASE_SYM', ['cipher_algo', 's2k_mode', 's2k_hash'])):
+    msg = "Issued whenever a passphrase for symmetric encryption is needed."
+    __slots__ = ()
+
+class NEED_PASSPHRASE_PIN(namedtuple('NEED_PASSPHRASE_PIN', ['card_type', 'chvno', 'serialno'])):
+    msg = "Issued whenever a PIN is requested to unlock a card."
+    __slots__ = ()
+
+class MISSING_PASSPHRASE(namedtuple('MISSING_PASSPHRASE', '')):
+    msg = "No passphrase was supplied."
+    __slots__ = ()
+
+class BAD_PASSPHRASE(namedtuple('BAD_PASSPHRASE', 'long_keyid')):
+    msg = "The supplied passphrase was wrong or not given."
+    __slots__ = ()
+
+class GOOD_PASSPHRASE(namedtuple('GOOD_PASSPHRASE', '')):
+    msg = "The supplied passphrase was good and the secret key material is therefore usable."
+    __slots__ = ()
+
+class DECRYPTION_FAILED(namedtuple('DECRYPTION_FAILED', '')):
+    msg = "The symmetric decryption failed - one reason could be a wrong passphrase for a symmetrical encrypted message."
+    __slots__ = ()
+
+class DECRYPTION_OKAY(namedtuple('DECRYPTION_OKAY', '')):
+    msg = "The decryption process succeeded."
+    __slots__ = ()
+
+class NO_PUBKEY(namedtuple('NO_PUBKEY', 'long_keyid')):
+    msg = "The key is not available"
+    __slots__ = ()
+
+class NO_SECKEY(namedtuple('NO_SECKEY', 'long_keyid')):
+    msg = "The key is not available"
+    __slots__ = ()
+
+class IMPORT_CHECK(namedtuple('IMPORT_CHECK', ['long_keyid', 'fingerprint', 'user_ID'])):
+    msg = 'This status is emitted in interactive mode right before the "import.okay" prompt.'
+    __slots__ = ()
+
+class IMPORTED(namedtuple('IMPORTED', ['long_keyid', 'username'])):
+    msg = "The keyid and name of the signature just imported"
+    __slots__ = ()
+
+class IMPORT_OK(namedtuple('IMPORT_OK', ['reason', 'fingerprint'])):
+    msg = \
+"""The key with the primary key's FINGERPRINT has been imported.
+    Reason flags:
+      0 := Not actually changed
+      1 := Entirely new key.
+      2 := New user IDs
+      4 := New signatures
+      8 := New subkeys
+     16 := Contains private key.
+    The flags may be ORed."""
+    __slots__ = ()
+
+class IMPORT_PROBLEM(namedtuple('IMPORT_PROBLEM', ['reason', 'fingerprint'])):
+    msg =  \
+"""Issued for each import failure.  Reason codes are:
+      0 := "No specific reason given".
+      1 := "Invalid Certificate".
+      2 := "Issuer Certificate missing".
+      3 := "Certificate Chain too long".
+      4 := "Error storing certificate"."""
+    __slots__ = ()
+
+class IMPORT_RES(namedtuple('IMPORT_RES', ['count', 'no_user_id', 'imported',
+        'imported_rsa', 'unchanged', 'n_uids', 'n_subk', 'n_sigs',
+        'n_revoc', 'sec_read', 'sec_imported', 'sec_dups',
+        'skipped_new_keys', 'not_imported'])):
+    msg = "Final statistics on import process."
+    __slots__ = ()
+
+class FILE_START(namedtuple('FILE_START', ['what', 'filename'])):
+    msg = \
 """Start processing a file <filename>.
     <what> indicates the performed operation:
         1 - verify
         2 - encrypt
-        3 - decrypt"""},
+        3 - decrypt"""
+    __slots__ = ()
 
-    'FILE_DONE': {
-        'data':[],
-        'msg':"Marks the end of a file processing which has been started by FILE_START."},
-    'BEGIN_DECRYPTION': {
-        'data':[],
-        'msg':
+class FILE_DONE(namedtuple('FILE_DONE', '')):
+    msg = "Marks the end of a file processing which has been started by FILE_START."
+    __slots__ = ()
+
+class BEGIN_DECRYPTION(namedtuple('BEGIN_DECRYPTION', '')):
+    msg = \
 """Mark the start of the actual decryption process.
-These are also emitted when in --list-only mode."""},
+These are also emitted when in --list-only mode."""
+    __slots__ = ()
 
-    'END_DECRYPTION': {
-        'data':[],
-        'msg':
+class END_DECRYPTION(namedtuple('END_DECRYPTION', '')):
+    msg = \
 """Mark the end of the actual decryption process.
-These are also emitted when in --list-only mode."""},
+These are also emitted when in --list-only mode."""
+    __slots__ = ()
 
-    'BEGIN_ENCRYPTION': {
-        'data':['mdc_method', 'sym_algo'],
-        'msg':"Mark the start of the actual encryption process."},
-    'END_ENCRYPTION': {
-        'data':[],
-        'msg':"Mark the end of the actual encryption process."},
-    'BEGIN_SIGNING': {
-        'data':[],
-        'msg':"Mark the start of the actual signing process."},
+class BEGIN_ENCRYPTION(namedtuple('BEGIN_ENCRYPTION', ['mdc_method', 'sym_algo'])):
+    msg = "Mark the start of the actual encryption process."
+    __slots__ = ()
 
-    'DELETE_PROBLEM': {
-        'data':['reason_code'],
-        'msg':
+class END_ENCRYPTION(namedtuple('END_ENCRYPTION', '')):
+    msg = "Mark the end of the actual encryption process."
+    __slots__ = ()
+
+class BEGIN_SIGNING(namedtuple('BEGIN_SIGNING', 'hash_algo')):
+    msg = "Mark the start of the actual signing process."
+
+    __slots__ = ()
+
+class DELETE_PROBLEM(namedtuple('DELETE_PROBLEM', 'reason_code')):
+    msg = \
 """Deleting a key failed. Reason codes are:
         1 - No such key
         2 - Must delete secret key first
-        3 - Ambigious specification"""},
+        3 - Ambigious specification"""
+    __slots__ = ()
 
-    'PROGRESS': {
-        'data':['what', 'char', 'cur', 'total'],
-        'msg':
+class PROGRESS(namedtuple('PROGRESS', ['what', 'char', 'cur', 'total'])):
+    msg = \
 """Used by the primegen and Public key functions to indicate progress.
 "char" is the character displayed with no --status-fd enabled, with
     the linefeed replaced by an 'X'.  "cur" is the current amount
@@ -257,54 +311,62 @@ These are also emitted when in --list-only mode."""},
                            not running as a daemon.
         "learncard" Send by the agent and gpgsm while learing
                     the data of a smartcard.
-        "card_busy" A smartcard is still working"""},
+        "card_busy" A smartcard is still working"""
+    __slots__ = ()
 
-    'SIG_CREATED': {
-        'data':['type', 'pubkey algo', 'hash algo', 'class',
-            'timestamp', 'key fpr'],
-        'msg':
+class SIG_CREATED(namedtuple('SIG_CREATED', ['type', 'pubkey_algo', 'hash_algo',
+            'sig_class', 'timestamp', 'key_fpr'])):
+    msg = \
 """A signature has been created using these parameters.
     type:  'D' = detached
            'C' = cleartext
            'S' = standard
            (only the first character should be checked)
-   class:  2 hex digits with the signature class"""},
+   class:  2 hex digits with the signature class"""
+    __slots__ = ()
 
-    'KEY_CREATED': {
-        'data':['type', 'fingerprint', '[handle]'],
-        'msg':
+class KEY_CREATED(namedtuple('KEY_CREATED', ['type', 'fingerprint', 'handle'])):
+    msg = \
 """A key has been created
     type: 'B' = primary and subkey
           'P' = primary
-          'S' = subkey"""},
+          'S' = subkey"""
+    __slots__ = ()
 
-    'KEY_NOT_CREATED': {
-        'data':['[handle]'],
-        'msg':"The key from batch run has not been created due to errors."},
-    'SESSION_KEY': {
-        'data':['algo', 'hexdigits'],
-        'msg':"The session key used to decrypt the message."},
-    'NOTATION_NAME': {
-        'data':['name'],
-        'msg':"name and string are %XX escaped; the data may be split among several NOTATION_DATA lines."},
-    'NOTATION_DATA': {
-        'data':['string'],
-        'msg':"Data assoiciated with the preceeding 'NOTATION_NAME'"},
-    'USERID_HINT': {
-        'data':['long-main-keyid', 'string'],
-        'msg':"Give a hint about the user ID for a certain keyID."},
-    'POLICY_URL': {
-        'data':['string'],
-        'msg':""},
-    'BEGIN_STREAM': {
-        'data':[],
-        'msg':"Issued by pipemode."},
-    'END_STREAM': {
-        'data':[],
-        'msg':"Issued by pipemode."},
-    'INV_RECP': {
-        'data':['reason', 'requested_recipient'],
-        'msg':
+class KEY_NOT_CREATED(namedtuple('KEY_NOT_CREATED', 'handle')):
+    msg = "The key from batch run has not been created due to errors."
+    __slots__ = ()
+
+class SESSION_KEY(namedtuple('SESSION_KEY', ['algo', 'hexdigits'])):
+    msg = "The session key used to decrypt the message."
+    __slots__ = ()
+
+class NOTATION_NAM(namedtuple('NOTATION_NAME', 'name')):
+    msg = "name and string are %XX escaped; the data may be split among several NOTATION_DATA lines."
+    __slots__ = ()
+
+class NOTATION_DATA(namedtuple('NOTATION_DATA', 'string')):
+    msg = "Data assoiciated with the preceeding 'NOTATION_NAME'"
+    __slots__ = ()
+
+class USERID_HINT(namedtuple('USERID_HINT', ['long_main_keyid', 'string'])):
+    msg = "Give a hint about the user ID for a certain keyID."
+    __slots__ = ()
+
+class POLICY_URL(namedtuple('POLICY_URL', 'string')):
+    msg = ""
+    __slots__ = ()
+
+class BEGIN_STREAM(namedtuple('BEGIN_STREAM', '')):
+    msg = "Issued by pipemode."
+    __slots__ = ()
+
+class END_STREAM(namedtuple('END_STREAM', '')):
+    msg = "Issued by pipemode."
+    __slots__ = ()
+
+class INV_RECP(namedtuple('INV_RECP', ['reason', 'requested_recipient'])):
+    msg = \
 """Issued for each unusable recipient/sender.
 The reasons codes currently in use are:
     0 := "No specific reason given".
@@ -319,11 +381,11 @@ The reasons codes currently in use are:
     9 := "Not a secret key"
     10 := "Key not trusted"
     11 := "Missing certificate"
-    12 := "Missing issuer certificate"""},
+    12 := "Missing issuer certificate"""
+    __slots__ = ()
 
-    'INV_SGNR': {
-        'data':['reason', 'requested_sender'],
-        'msg':
+class INV_SGNR(namedtuple('INV_SGNR', ['reason', 'requested_sender'])):
+    msg = \
 """Issued for each unusable recipient/sender.
 The reasons codes currently in use are:
     0 := "No specific reason given".
@@ -338,33 +400,40 @@ The reasons codes currently in use are:
     9 := "Not a secret key"
     10 := "Key not trusted"
     11 := "Missing certificate"
-    12 := "Missing issuer certificate"""},
+    12 := "Missing issuer certificate"""
+    __slots__ = ()
 
-    'NO_RECP': {
-        'data':['reserved',],
-        'msg':"Issued when no recipients are usable."},
-    'NO_SGNR': {
-        'data':['reserved'],
-        'msg':"Issued when no senders are usable."},
-    'ALREADY_SIGNED': {
-        'data':['long-keyid'],
-        'msg':"Warning: This is experimental and might be removed at any time."},
-    'TRUNCATED': {
-        'data':['maxno'],
-        'msg':"The output was truncated to MAXNO items."},
-    'ERROR': {
-        'data':['error-location', 'error-code', '[more]'],
-        'msg':"This is a generic error status message, it might be followed by error location specific data."},
-    'SUCCESS': {
-        'data':['[location]'],
-        'msg':"Postive confirimation that an operation succeeded."},
-    'ATTRIBUTE': {
-        'data':['fpr', 'octets', 'type', 'index', 'count',
-            'timestamp', 'expiredate', 'flags'],
-        'msg':"This is one long line issued for each attribute subpacket when an attribute packet is seen during key listing."},
-    'CARDCTRL': {
-        'data':['what', '[serialno]'],
-        'msg':
+class NO_RECP(namedtuple('NO_RECP', 'reserved')):
+    msg = "Issued when no recipients are usable."
+    __slots__ = ()
+
+class NO_SGNR(namedtuple('NO_SGNR', 'reserved')):
+    msg = "Issued when no senders are usable."
+    __slots__ = ()
+
+class ALREADY_SIGNED(namedtuple('ALREADY_SIGNED', 'long_keyid')):
+    msg = "Warning: This is experimental and might be removed at any time."
+    __slots__ = ()
+
+class TRUNCATED(namedtuple('TRUNCATED', 'maxno')):
+    msg = "The output was truncated to MAXNO items."
+    __slots__ = ()
+
+class ERROR(namedtuple('ERROR', ['error_location', 'error_code', 'more'])):
+    msg = "This is a generic error status message, it might be followed by error location specific data."
+    __slots__ = ()
+
+class SUCCESS(namedtuple('SUCCESS', 'location')):
+    msg = "Postive confirimation that an operation succeeded."
+    __slots__ = ()
+
+class ATTRIBUTE(namedtuple('ATTRIBUTE', ['fpr', 'octets', 'type', 'index', 'count',
+            'timestamp', 'expiredate', 'flags'])):
+    msg = "This is one long line issued for each attribute subpacket when an attribute packet is seen during key listing."
+    __slots__ = ()
+
+class CARDCTRL(namedtuple('CARDCTRL', ['what', 'serialno'])):
+    msg = \
 """This is used to control smartcard operations.
     Defined values for WHAT are:
         1 = Request insertion of a card.  Serialnumber may be given
@@ -373,38 +442,42 @@ The reasons codes currently in use are:
         3 = Card with serialnumber detected
         4 = No card available.
         5 = No card reader available
-        6 = No card support available"""},
+        6 = No card support available"""
+    __slots__ = ()
 
-    'PLAINTEXT':  {
-        'data':['format', 'timestamp', 'filename'],
-        'msg':"This indicates the format of the plaintext that is about to be written."},
-    'PLAINTEXT_LENGTH':  {
-        'data':['length'],
-        'msg':"This indicates the length of the plaintext that is about to be written."},
-    'SIG_SUBPACKET': {
-        'data':['type', 'flags',
-            'length', 'data'],
-        'msg':"This indicates that a signature subpacket was seen."},
-    'SC_OP_FAILURE': {
-        'data':['[code]'],
-        'msg':
+class PLAINTEXT(namedtuple('PLAINTEXT', ['format', 'timestamp', 'filename'])):
+    msg = "This indicates the format of the plaintext that is about to be written."
+    __slots__ = ()
+
+class PLAINTEXT_LENGTH(namedtuple('PLAINTEXT_LENGTH', 'length')):
+    msg = "This indicates the length of the plaintext that is about to be written."
+    __slots__ = ()
+
+class SIG_SUBPACKET(namedtuple('SIG_SUBPACKET', ['type', 'flags', 'length', 'data'])):
+    msg = "This indicates that a signature subpacket was seen."
+    __slots__ = ()
+
+class SC_OP_FAILURE(namedtuple('SC_OP_FAILURE', 'code')):
+    msg = \
 """An operation on a smartcard definitely failed.
     Defined values for CODE are:
         0 - unspecified error (identically to a missing CODE)
         1 - canceled
-        2 - bad PIN"""},
+        2 - bad PIN"""
+    __slots__ = ()
 
-    'SC_OP_SUCCESS': {
-        'data':[],
-        'msg':"A smart card operaion succeeded."},
-    'BACKUP_KEY_CREATED': {
-        'data':['fingerprint', 'fname'],
-        'msg':"A backup key named FNAME has been created for the key with KEYID."},
-    'MOUNTPOINT': {
-        'data':['name'],
-        'msg':"NAME is a percent-plus escaped filename describing the mountpoint for the current operation (e.g. g13 --mount)."},
-    'DECRYPTION_INFO': {
-        'data':['mdc_method', 'sym_algo'],
-        'msg':"Print information about the symmetric encryption algorithm and the MDC method."},
-}
+class SC_OP_SUCCESS(namedtuple('SC_OP_SUCCESS', '')):
+    msg = "A smart card operaion succeeded."
+    __slots__ = ()
+
+class BACKUP_KEY_CREATED(namedtuple('BACKUP_KEY_CREATED', ['fingerprint', 'fname'])):
+    msg = "A backup key named FNAME has been created for the key with KEYID."
+    __slots__ = ()
+
+class MOUNTPOINT(namedtuple('MOUNTPOINT', 'name')):
+    msg = "NAME is a percent-plus escaped filename describing the mountpoint for the current operation (e.g. g13 --mount)."
+    __slots__ = ()
+
+class DECRYPTION_INFO(namedtuple('DECRYPTION_INFO', ['mdc_method', 'sym_algo'])):
+    msg = "Print information about the symmetric encryption algorithm and the MDC method."
 
