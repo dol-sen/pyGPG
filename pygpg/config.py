@@ -23,27 +23,23 @@ class GPGConfig(object):
     '''holds all options and configuration data
     for running the GnuPG class'''
 
-    def __init__(self):
-        self._defaults = {
-            'gpg_command': '/usr/bin/gpg',
-            'decrypt': '--decrypt',
-            'verify': '--verify',
-            'sign': '--sign',
-            'clearsign': '--clearsign',
-            'detach-sign': '--detach-sign',
-            'dump-options': '--dump-options',
-            'list-keys': '--list-keys',
-            'list-secret-keys': '--list-secret-keys',
-            'no-tty': '--no-tty',
-            'version': '--version',
-            # defaults added to each gpg process run
-            'gpg_defaults': '--status-fd 2 --no-tty',
-            'only_usable': False,
-            'refetch': False,
-        }
-        self.options = {
-        }
-        self.task_options = {
+    defaults = {
+        'gpg_command': '/usr/bin/gpg',
+        'decrypt': '--decrypt',
+        'verify': '--verify',
+        'sign': '--sign',
+        'clearsign': '--clearsign',
+        'detach-sign': '--detach-sign',
+        'dump-options': '--dump-options',
+        'list-keys': '--list-keys',
+        'list-secret-keys': '--list-secret-keys',
+        'no-tty': '--no-tty',
+        'version': '--version',
+        # defaults added to each gpg process run
+        'gpg_defaults': '--status-fd 2 --no-tty',
+        'only_usable': False,
+        'refetch': False,
+        'tasks': {
             'decrypt': '',
             'verify': '',
             'sign': '',
@@ -54,6 +50,13 @@ class GPGConfig(object):
             'list-secret-keys': '--attribute-fd 2',
             'version': '',
         }
+    }
+
+
+    def __init__(self):
+        self.options = {
+            'tasks': {}
+        }
         self.unsupported = set()
 
 
@@ -61,13 +64,27 @@ class GPGConfig(object):
         return self._get_(key)
 
 
-    def _get_(self, key):
-        if (key in self.options
-            and not self.options[key] is None):
-            return self.options[key]
-        if key in self._defaults:
-            return self._defaults[key]
-        return None
+    def _get_(self, key, subkey=None):
+        if (key in self.options and not self.options[key] is None):
+            if subkey:
+                if subkey in self.options[key]:
+                    return self.options[key][subkey]
+                elif subkey in self.defaults[key]:
+                    return self.defaults[key][subkey]
+                else:
+                    return 'foo-bar\'d subkey... options'
+            return self.options[key] or self.defaults[key]
+        elif key in self.defaults:
+            if subkey:
+                if subkey in self.defaults[key]:
+                    return self.defaults[key][subkey]
+                else:
+                    return 'foo-bar\'d subkey... defaults'
+            return self.defaults[key]
+        return 'foo-bar\'d key'
+
+    def get(self, key, subkey=None):
+        return self._get_(key, subkey)
 
 
     def get_defaults(self):
