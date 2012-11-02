@@ -24,7 +24,7 @@ class GPGConfig(object):
     for running the GnuPG class'''
 
     defaults = {
-        'gpg_command': '/usr/bin/gpg',
+        'gpg_command': '/usr/bin/gpg2',
         'decrypt': '--decrypt',
         'verify': '--verify',
         'sign': '--sign',
@@ -36,19 +36,19 @@ class GPGConfig(object):
         'no-tty': '--no-tty',
         'version': '--version',
         # defaults added to each gpg process run
-        'gpg_defaults': '--status-fd 2 --no-tty',
+        'gpg_defaults': ['--status-fd', '2', '--no-tty'],
         'only_usable': False,
         'refetch': False,
         'tasks': {
-            'decrypt': '',
-            'verify': '',
-            'sign': '',
-            'clearsign': '',
-            'detach-sign': '',
-            'dump-options': '',
-            'list-keys': '--attribute-fd 2',
-            'list-secret-keys': '--attribute-fd 2',
-            'version': '',
+            'decrypt': [],
+            'verify': [],
+            'sign': [],
+            'clearsign': [],
+            'detach-sign': [],
+            'dump-options': [],
+            'list-keys': ['--attribute-fd', '2'],
+            'list-secret-keys': ['--attribute-fd', '2'],
+            'version': [],
         }
     }
 

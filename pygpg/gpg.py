@@ -18,6 +18,8 @@
 
 from __future__ import with_statement
 
+import os
+import copy
 from subprocess import Popen, PIPE
 
 #import pygpg
@@ -39,57 +41,68 @@ class GPG(object):
         self._gpg_version = None
         self._gpg_options = None
         self.history = []
+        self.env = copy.copy(os.environ)
 
 
-    def _process_gpg(self, action, gpg_input=None, filepath=None, _shell=True):
-        '''Creates and opens the subprocess object
+
+    def runGPG(self, action=None, gpg_input=None, filepath=None):
+        '''Creates, opens and runs the subprocess object
         @rtype GnuPGResult object
         '''
         results = ('', '') # null
         gpg = None
+        if not action:
+            return None
+        args = [self.config['gpg_command']]
+        args.extend(self.config['gpg_defaults'])
+        task_opts = self.config.get('tasks', action)
+        if task_opts:
+            args.extend(task_opts)
+        args.append(self.config[action])
+        args = [x for x in args if x != '']
         if gpg_input is not None:
-            args = [self.config['gpg_command'],
-                    self.config['gpg_defaults']]
-            if self.config.task_options[action]:
-                args.append(self.config.task_options[action])
-            args.append(self.config[action])
-            # need to pass a string not a list or
-            # the status messages won't be ouput
-            cmd = ' '.join(args)
-            self.history.append("Running gpg with: '%s'" % cmd)
-            gpg = Popen(cmd, shell=_shell, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+            # history is only for initial debugging
+            self.history.append("Running gpg with: '%s'" % str(args))
+            gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+                env=self.env)
             results = gpg.communicate(gpg_input)
         elif filepath is not None:
-            pass
+            args.extend(['-o',filepath])
+            # history is only for initial debugging
+            self.history.append("Running gpg with: '%s'" % str(args))
+            # need to set stdin to /dev/null
+            gpg = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE,
+                env=self.env)
+            results = gpg.communicate('')
         return GPGResult(gpg, results)
 
-    def decrypt(self, gpg_input=None, filepath=None, shell=True):
+    def decrypt(self, gpg_input=None, filepath=None):
         '''Decrypts the gpg_input block passed in
-        or the file found at filepath
+        or the file found at filepath.
 
         @rtype GnuPGResult object
         '''
-        return self._process_gpg('decrypt', gpg_input, filepath, shell)
+        return self.runGPG('decrypt', gpg_input, filepath)
 
-    def verify(self, gpg_input=None, filepath=None, shell=True):
-        return self._process_gpg('verify', gpg_input, filepath, shell)
+    def verify(self, gpg_input=None, filepath=None):
+        return self.runGPG('verify', gpg_input, filepath)
 
-    def sign(self, mode, gpg_input=None, filepath=None, shell=True):
+    def sign(self, mode, gpg_input=None, filepath=None):
         if mode not in self.config.sign_modes():
             return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
                 'mode passed in: %s\n' % mode)
-        return self._process_gpg(mode, gpg_input, filepath, shell)
+        return self.runGPG(mode, gpg_input, filepath)
 
     @property
-    def dump_options(self):
-        '''Runs 'gpg --dump-options'
-        @param only_usable: Boolean, When True will filter
+    def options(self):
+        '''Runs 'gpg --dump-options' for a list of all available gpg options.
+        config parameter only_usable: Boolean, When True will filter
             the returned list to only contain the options this class
             is capable of using.
-        @param refetch: Boolean
+        config parameter refetch: Boolean
         @rtype list: of options from gpg'''
         if not self._gpg_options or self.config['refetch']:
-            self._gpg_options = self._process_gpg('dump-options', '')
+            self._gpg_options = self.runGPG('dump-options', '')
         opts = self._gpg_options.output.split("\n")
         if self.config['only_usable']:
             return list(set(opts.difference(self.config.unsupported)))
@@ -101,11 +114,6 @@ class GPG(object):
         @param refetch: Boolean
         @rtype list: of options from gpg'''
         if (self._gpg_version is None) or self.config['refetch']:
-            self._gpg_version = self._process_gpg('version', '')
+            self._gpg_version = self.runGPG('version', '')
         return self._gpg_version.output.split("\n")
 
-    def custom_run(self, **kwargs):
-        '''Runs gpg with any options, modes available
-        @param **kwargs: dictionary of keyword arguments
-        @rtype '''
-        pass
