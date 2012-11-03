@@ -22,8 +22,10 @@ from collections import namedtuple
 
 
 # make this global, so is easy to change, and calculates only once
-IDENTIFIER = '[GNUPG:] '
-ID_LEN = len(IDENTIFIER)
+GPG_IDENTIFIER = '[GNUPG:]'
+PYGPG_IDENTIFIER = '[PyGPG:]'
+GPG_VER_IDENTFIER = 'gpg (GnuPG)'
+
 
 class NEWSIG(namedtuple('NEWSIG', '')):
     name = 'NEWSIG'
@@ -565,4 +567,42 @@ class MOUNTPOINT(namedtuple('MOUNTPOINT', 'name')):
 class DECRYPTION_INFO(namedtuple('DECRYPTION_INFO', ['mdc_method', 'sym_algo'])):
     name = 'DECRYPTION_INFO'
     msg = "Print information about the symmetric encryption algorithm and the MDC method."
+
+class GPG_VERSION(namedtuple('GPG_VERSION', ['gpg', 'libcrypt', 'copyright',
+        'license', 'home', 'sup_pubkey',
+        'sup_cipher', 'sup_hash', 'sup_compress'])):
+    name = 'GPG_VERSION'
+    msg = \
+'''GnuPG version information
+    sup_pubkey = supported public key types
+    sub_cipher = supported Cipher algorithms
+    sup_hash = suppoted Hash algorithms
+    sup_compress = supported compression algorithms
+'''
+    __slots__ = ()
+
+
+## PyGPG message classes
+
+class PYGPG_VERSION(namedtuple('PYGPG_VERSION', ['pygpg', 'license'])):
+    name = 'PYGPG_VERSION'
+    msg = "PyGPG version information"
+    __slots__ = ()
+
+class PYGPG_UNEXPECTED_DATA(namedtuple('PYGPG_UNEXPECTED_DATA', ['key',
+        'fields', 'extra_data'])):
+    name = 'PYGPG_UNEXPECTED_DATA'
+    msg = 'Unexpected data was encountered processing a gpg status ouput message'
+    __slots__ = ()
+
+class PYGPG_ATTRIBUTE_ERROR(namedtuple('PYGPG_ATTRIBUTE_ERROR', ['module',
+        'classname'])):
+    name = 'PYGPG_ATTRIBUTE_ERROR'
+    msg = "ERROR retreiving class."
+    __slots__ = ()
+
+class PYGPG_MESSAGE(namedtuple('PYGPG_MESSAGE', ['message'])):
+    name = 'PYGPG_MESSAGE'
+    msg = 'Generic mesage'
+    __slots__ = ()
 

@@ -23,6 +23,8 @@ import copy
 from subprocess import Popen, PIPE
 
 from pygpg.output import GPGResult
+from pygpg.version import version, License
+from pygpg.legend import PYGPG_IDENTIFIER
 
 
 class GPG(object):
@@ -107,12 +109,22 @@ class GPG(object):
         return opts
 
 
-    @property
-    def version(self):
+    def version(self, verbose=False):
         '''Runs 'gpg --version'
         @param refetch: Boolean
         @rtype list: of options from gpg'''
         if (self._gpg_version is None) or self.config['refetch']:
             self._gpg_version = self.runGPG('version', '')
-        return self._gpg_version.output.split("\n")
+            self._gpg_version.status.process_gpg_ver(self._gpg_version.output.split('\n'))
+            # now do pygpg version
+            # insert it as the first entry in status.data
+            target = []
+            parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', version, License]
+            self._gpg_version.status.process_pygpg_msg(parts=parts, target=target)
+            self._gpg_version.status.data.insert(0,target[0])
+        if verbose:
+            return self._gpg_version.status.data
+        data = self._gpg_version.status.data
+        return ['pygpg: %s' % data[0].pygpg, 'gpg: %s' % data[1].gpg,
+            'libcrypt: %s' % data[1].libcrypt]
 
