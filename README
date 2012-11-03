@@ -9,11 +9,14 @@ gpg's status-fd messages.
 What makes this wrapper work more flexibly is that it is very config based for
 runnning the gpg subprocesses.  The focus is not about providing a specific
 python function for every action gpg is capable of.  GPG itself is very much
-option based, so to that end so is this wrapper.
+option based, so to that end so is this wrapper.  All that is needed is to
+tweak the options to your liking, then runGPG() passing it your desired
+action, and either text for stdin input or a filepath for it to process.
 
-    So far there is a general runGPG() capable most any action gpg is capable
-    of.  There are some other convience functions which in turn establish some
-    parameters and call runGPG() for you.  They are decrypt, verify, sign.
-    There are also version and options properties which return the information
-    gleaned from running gpg.
+    So far there is a general runGPG() capable of almost any action gpg is
+    capable of.  It is early in development, so have not tested all the
+    actions.  There are a few other convience functions which in turn
+    establish some parameters and call runGPG() for you.  They are decrypt,
+    verify, sign.  There are also version and options properties which return
+    the information gleaned from running gpg.
 
