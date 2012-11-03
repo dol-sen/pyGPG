@@ -22,12 +22,7 @@ import os
 import copy
 from subprocess import Popen, PIPE
 
-#import pygpg
-#from pygpg import output
 from pygpg.output import GPGResult
-
-# live testing cmds.
-# import pygpg;from pygpg.config import GPGConfig;from pygpg.gpg import GPG;c=GPGConfig();gpg=GPG(c);v=gpg.version;asc=open('/home/brian/layman-test/repositories.xml.asc', 'r').read();d=gpg.decrypt(gpg_input=asc);pl=open('/home/brian/layman-test/installed.xml', 'r').read();s=gpg.sign('clearsign', gpg_input=pl)
 
 
 class GPG(object):
@@ -42,7 +37,6 @@ class GPG(object):
         self._gpg_options = None
         self.history = []
         self.env = copy.copy(os.environ)
-
 
 
     def runGPG(self, action=None, gpg_input=None, filepath=None):
@@ -76,6 +70,7 @@ class GPG(object):
             results = gpg.communicate('')
         return GPGResult(gpg, results)
 
+
     def decrypt(self, gpg_input=None, filepath=None):
         '''Decrypts the gpg_input block passed in
         or the file found at filepath.
@@ -84,14 +79,17 @@ class GPG(object):
         '''
         return self.runGPG('decrypt', gpg_input, filepath)
 
+
     def verify(self, gpg_input=None, filepath=None):
         return self.runGPG('verify', gpg_input, filepath)
+
 
     def sign(self, mode, gpg_input=None, filepath=None):
         if mode not in self.config.sign_modes():
             return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
                 'mode passed in: %s\n' % mode)
         return self.runGPG(mode, gpg_input, filepath)
+
 
     @property
     def options(self):
@@ -107,6 +105,7 @@ class GPG(object):
         if self.config['only_usable']:
             return list(set(opts.difference(self.config.unsupported)))
         return opts
+
 
     @property
     def version(self):
