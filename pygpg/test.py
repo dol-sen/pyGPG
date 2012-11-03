@@ -10,7 +10,9 @@
 from pygpg.config import GPGConfig
 from pygpg.gpg import GPG;c=GPGConfig()
 
-gpg=GPG(c);v=gpg.version
+gpg=GPG(c)
+
+v=gpg.version()
 
 def ds():
 
