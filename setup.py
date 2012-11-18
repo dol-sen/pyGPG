@@ -18,7 +18,7 @@ setup(name          = 'pygpg',
       description   = "A python interface wrapper for gnupg's gpg command",
       author        = 'Brian Dolbec',
       author_email  = 'dolsen@gentoo',
-      url           = ="https://github.com/dol-sen/pyGPG",
+      url           = "https://github.com/dol-sen/pyGPG",
       packages      = ['pygpg'],
       license       = License,
       )
