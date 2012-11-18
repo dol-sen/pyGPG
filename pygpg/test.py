@@ -18,11 +18,11 @@ def ds():
 
     asc=open('/home/brian/layman-test/repositories.xml.asc', 'r').read()
 
-    d=gpg.decrypt(gpg_input=asc)
+    d=gpg.decrypt(inputtxt=asc)
 
     pl=open('/home/brian/layman-test/installed.xml', 'r').read()
 
-    s=gpg.sign('clearsign', gpg_input=pl)
+    s=gpg.sign('clearsign', inputtxt=pl)
 
     return d,s
 
