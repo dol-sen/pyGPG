@@ -10,7 +10,7 @@ sys.path.insert(0, './')
 from pygpg.version import Version, License
 
 
-__version__ = os.getenv('VERSION', default='9999')
+#__version__ = os.getenv('VERSION', default='9999')
 
 
 setup(name          = 'pygpg',
