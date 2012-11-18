@@ -1,13 +1,14 @@
-PyGPG  is a python wrapper for gnupg's gpg command.  It runs gpg and gathers data
-from the gpg's outputs, making that data availabe to python code consumers.
+PyGPG  is a python interface wrapper for gnupg's gpg command.  It runs gpg and
+gathers data from the gpg's outputs, making that data availabe to python code
+consumers.
 
 It aims to provide a very flexible, reliable and secure method to integrate
 gnupg functionality into python programs.  It also has (IMHO) a very good,
 flexible method of mining and making available all the data obtained from
 gpg's status-fd messages.
 
-What makes this wrapper work more flexibly is that it is very config based for
-runnning the gpg subprocesses.  The focus is not about providing a specific
+What makes this wrapper work more flexibly is that it is very much config based
+for runnning the gpg subprocesses.  The focus is not about providing a specific
 python function for every action gpg is capable of.  GPG itself is very much
 option based, so to that end so is this wrapper.  All that is needed is to
 tweak the options to your liking, then runGPG() passing it your desired
