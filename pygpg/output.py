@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#################################################################################
+####################
 # pyGPG GnuPGResult
-#################################################################################
+####################
 # File:       output.py
 #
 #             Python class for interpreting the results
@@ -10,7 +10,7 @@
 #
 # Copyright:
 #             (c) 2012 Brian Dolbec
-#             Distributed under the terms of the GNU General Public License v2
+#             Distributed under the terms of the BSD license
 #
 # Author(s):
 #             Brian Dolbec <dolsen@gentoo.org>
@@ -72,6 +72,12 @@ class GPGResult(object):
 
 
     @property
+    def username(self):
+        fields = ['username']
+        return self.get_data(fields)
+
+
+    @property
     def fingerprint(self):
         fields = ['fingerprint']
         return self.get_data(fields)
@@ -109,9 +115,7 @@ class GPGResult(object):
         else:
             status_type = self._check_param_type(status_type)
         if fields is None:
-            fields = []
-            for x in self.status.data:
-                fields.extend(list(x._fields))
+            return [x for x in self.status.data if x.name in status_type]
         else:
             fields = self._check_param_type(fields)
 

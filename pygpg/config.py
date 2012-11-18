@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#################################################################################
+####################
 # pyGPG Config
-#################################################################################
+####################
 # File:       config.py
 #
 #             Python configuration and options class for
@@ -10,7 +10,7 @@
 #
 # Copyright:
 #             (c) 2012 Brian Dolbec
-#             Distributed under the terms of the GNU General Public License v2
+#             Distributed under the terms of the BSD license
 #
 # Author(s):
 #             Brian Dolbec <dolsen@gentoo.org>
@@ -83,7 +83,7 @@ class GPGConfig(object):
             return self.defaults[key]
         return 'foo-bar\'d key'
 
-    def get(self, key, subkey=None):
+    def get_key(self, key, subkey=None):
         return self._get_(key, subkey)
 
 
@@ -102,6 +102,6 @@ class GPGConfig(object):
             '''
         supported = ["clearsign", "sign", "detach-sign"]
         if gpg_options:
-            return list(set(supported).intersection(set(gpg_options)))
+            return list(set(supported).intersection(gpg_options))
         return supported
 

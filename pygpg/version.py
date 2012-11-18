@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#################################################################################
+####################
 # pyGPG Config
-#################################################################################
+####################
 # File:       config.py
 #
 #             Python configuration and options class for
@@ -10,12 +10,12 @@
 #
 # Copyright:
 #             (c) 2012 Brian Dolbec
-#             Distributed under the terms of the GNU General Public License v2
+#             Distributed under the terms of the BSD license
 #
 # Author(s):
 #             Brian Dolbec <dolsen@gentoo.org>
 #
 
-version = 'git'
+Version = 'Git'
 
-License = 'GPL2'
+License = 'BSD'

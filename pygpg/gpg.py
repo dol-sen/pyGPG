@@ -1,15 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-#################################################################################
+####################
 # pyGPG GPG handler
-#################################################################################
+####################
 # File:       gnupg.py
 #
 #             Python Interface access to gnupg
 #
 # Copyright:
 #             (c) 2012 Brian Dolbec
-#             Distributed under the terms of the GNU General Public License v2
+#             Distributed under the terms of the BSD license
 #
 # Author(s):
 #             Brian Dolbec <dolsen@gentoo.org>
@@ -23,7 +23,7 @@ import copy
 from subprocess import Popen, PIPE
 
 from pygpg.output import GPGResult
-from pygpg.version import version, License
+from pygpg.version import Version, License
 from pygpg.legend import PYGPG_IDENTIFIER
 
 
@@ -41,7 +41,7 @@ class GPG(object):
         self.env = copy.copy(os.environ)
 
 
-    def runGPG(self, action=None, gpg_input=None, filepath=None):
+    def runGPG(self, action=None, inputtxt=None, inputfile=None, outputfile=None):
         '''Creates, opens and runs the subprocess object
         @rtype GnuPGResult object
         '''
@@ -51,46 +51,50 @@ class GPG(object):
             return None
         args = [self.config['gpg_command']]
         args.extend(self.config['gpg_defaults'])
-        task_opts = self.config.get('tasks', action)
+        task_opts = self.config.get_key('tasks', action)
         if task_opts:
             args.extend(task_opts)
-        args.append(self.config[action])
+        if outputfile:
+            args.extend(['-o',outputfile])
         args = [x for x in args if x != '']
-        if gpg_input is not None:
-            # history is only for initial debugging
-            self.history.append("Running gpg with: '%s'" % str(args))
-            gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                env=self.env)
-            results = gpg.communicate(gpg_input)
-        elif filepath is not None:
-            args.extend(['-o',filepath])
-            # history is only for initial debugging
-            self.history.append("Running gpg with: '%s'" % str(args))
-            # need to set stdin to /dev/null
-            gpg = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE,
-                env=self.env)
-            results = gpg.communicate('')
+        if inputtxt is None and inputfile is not None:
+                inputtxt = open('/dev/null', 'wb')
+                args.extend([self.config[action], inputfile])
+        if inputtxt and inputfile is not None:
+                args.extend([self.config[action], inputfile, '-'])
+        elif inputtxt is None:
+            print "ERROR!  #  fixme"
+            return None
+        else:
+            args.append(self.config[action])
+        # history is only for initial debugging
+        #self.history.append(
+        print "Running gpg with: '%s'" % str(args)
+        gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
+        results = gpg.communicate(inputtxt)
+        #inputtxt.close()
         return GPGResult(gpg, results)
 
 
-    def decrypt(self, gpg_input=None, filepath=None):
-        '''Decrypts the gpg_input block passed in
-        or the file found at filepath.
+    def decrypt(self, inputtxt=None, inputfile=None, outputfile=None):
+        '''Decrypts the inputtxt block passed in
+        or the file found at inputfile and saves it to outputfile,
+        and/or returns the decrypted as GPGResult.output
 
         @rtype GnuPGResult object
         '''
-        return self.runGPG('decrypt', gpg_input, filepath)
+        return self.runGPG('decrypt', inputtxt, inputfile, outputfile)
 
 
-    def verify(self, gpg_input=None, filepath=None):
-        return self.runGPG('verify', gpg_input, filepath)
+    def verify(self, inputtxt=None, inputfile=None, outputfile=None):
+        return self.runGPG('verify', inputtxt, inputfile, outputfile)
 
 
-    def sign(self, mode, gpg_input=None, filepath=None):
+    def sign(self, mode, inputtxt=None, inputfile=None, outputfile=None):
         if mode not in self.config.sign_modes():
             return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
                 'mode passed in: %s\n' % mode)
-        return self.runGPG(mode, gpg_input, filepath)
+        return self.runGPG(mode, inputtxt, inputfile, outputfile)
 
 
     @property
@@ -119,12 +123,14 @@ class GPG(object):
             # now do pygpg version
             # insert it as the first entry in status.data
             target = []
-            parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', version, License]
+            parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', Version, License]
             self._gpg_version.status.process_pygpg_msg(parts=parts, target=target)
             self._gpg_version.status.data.insert(0,target[0])
-        if verbose:
-            return self._gpg_version.status.data
         data = self._gpg_version.status.data
-        return ['pygpg: %s' % data[0].pygpg, 'gpg: %s' % data[1].gpg,
-            'libcrypt: %s' % data[1].libcrypt]
+        if verbose:
+            result = {}
+            for x in data:
+                result[x.name] = x._asdict()
+        return {'pygpg':data[0].pygpg, 'gpg':data[1].gpg,
+            'libcrypt':data[1].libcrypt}
 
