@@ -263,7 +263,8 @@ The reasons codes currently in use are:
 
 for (name, fields, msg) in CLASSES:
     obj = locals()[name] = namedtuple(name, fields)
-    obj.name = snakeoil.klass.alias_attr('__class__.__name__')
+    #obj.name = snakeoil.klass.alias_attr('__class__.__name__')
+    obj.name = obj.__class__.__name__
     obj.msg = msg
     obj.__slots__ = ()
 del obj
