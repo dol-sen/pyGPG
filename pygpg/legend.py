@@ -256,6 +256,7 @@ The reasons codes currently in use are:
     ('PYGPG_UNEXPECTED_DATA', ['key', 'fields', 'extra_data'], 'Unexpected data was encountered processing a gpg status ouput message'),
     ('PYGPG_ATTRIBUTE_ERROR', ['module', 'classname'], "ERROR retreiving class."),
     ('PYGPG_MESSAGE', ['message'], 'Generic mesage'),
+    ('PYGPG_ERROR', ['error', 'function', 'message'], "Internal pyGPG error message, refer to the data's attributes for more detail"),
 ]
 
 

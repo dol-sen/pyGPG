@@ -42,7 +42,7 @@ class GPG(object):
 
 
     def runGPG(self, action=None, inputtxt=None, inputfile=None, outputfile=None):
-        '''Creates, opens and runs the subprocess object
+        '''Creates, opens and runs the gpg subprocess
         @rtype GnuPGResult object
         '''
         results = ('', '') # null
@@ -63,8 +63,12 @@ class GPG(object):
         if inputtxt and inputfile is not None:
                 args.extend([self.config[action], inputfile, '-'])
         elif inputtxt is None:
-            print "ERROR!  #  fixme"
-            return None
+            err = GPGResult(None, ['',''])
+            parts = [PYGPG_IDENTIFIER, 'PYGPG_ERROR',
+                'no-input-specified', 'GPG.runGPG()',
+                'You must pass in a non-None inputtxt or inputfile to process']
+            err.status.process_pygpg_msg(parts=parts)
+            return err
         else:
             args.append(self.config[action])
         # history is only for initial debugging
@@ -116,7 +120,7 @@ class GPG(object):
     def version(self, verbose=False):
         '''Runs 'gpg --version'
         @param refetch: Boolean
-        @rtype list: of options from gpg'''
+        @rtype dict: of versions'''
         if (self._gpg_version is None) or self.config['refetch']:
             self._gpg_version = self.runGPG('version', '')
             self._gpg_version.status.process_gpg_ver(self._gpg_version.output.split('\n'))
