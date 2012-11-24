@@ -20,7 +20,7 @@
 
 from collections import namedtuple
 
-import snakeoil.klass
+#import snakeoil.klass
 
 # make this global, so is easy to change, and calculates only once
 GPG_IDENTIFIER = '[GNUPG:]'
