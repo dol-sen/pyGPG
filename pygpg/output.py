@@ -32,6 +32,7 @@ class GPGResult(object):
     '''GnuPG process result handler'''
 
     def __init__(self, gpg, results):
+        '''Class init function'''
         self.gpg = gpg
         self.output = results[0]
         self.stderr_out = results[1].split('\n')
@@ -41,6 +42,11 @@ class GPGResult(object):
 
     @property
     def verified(self):
+        '''Checks the output status data for goog or valid signatures
+
+        @rtype tuple: (bool: verification staus,
+            trust: legend.TRUST_* class instance or 'Unknown')
+        '''
         good = ['GOODSIG', 'VALIDSIG', 'SIG_CREATED']
         trusts = ['TRUST_UNDEFINED', 'TRUST_NEVER', 'TRUST_MARGINAL',
             'TRUST_FULLY', 'TRUST_ULTIMATE']
@@ -55,37 +61,60 @@ class GPGResult(object):
 
     @property
     def time(self):
+        '''Looks for time status data types in the status messages
+
+        @rtype list: of matching legend class instances found
+        '''
         fields = ['timestamp', 'sig_timestamp', 'expire_timestamp', ]
         return self.get_data(fields)
 
 
     @property
     def keyid(self):
+        '''Looks for keyid status data types in the status messages
+
+        @rtype list: of matching legend class instances found
+        '''
         fields = ['long_keyid', 'long_main_keyid']
         return self.get_data(fields)
 
 
     @property
     def keytype(self):
+        '''Looks for keytype status data types in the status messages
+
+        @rtype list: of matching legend class instances found
+        '''
         fields = ['keytype']
         return self.get_data(fields)
 
 
     @property
     def username(self):
+        '''Looks for username status data types in the status messages
+
+        @rtype list: of matching legend class instances found
+        '''
         fields = ['username']
         return self.get_data(fields)
 
 
     @property
     def fingerprint(self):
+        '''Looks for fingerprint status data types in the status messages
+
+        @rtype list: of matching legend class instances found
+        '''
         fields = ['fingerprint']
         return self.get_data(fields)
 
 
     @property
     def returncode(self):
-        '''The return code of the gpg process that was run '''
+        '''The return code of the gpg process that was run
+
+        @rtype int
+        '''
         return self.gpg.returncode
 
 
@@ -108,7 +137,7 @@ class GPGResult(object):
 
         @param fields: string or list of field name strings to search for
         @param staus_type: string or list of class name strings to search for
-        @returns list: of (type name,field,data) tuples
+        @rtype list: of (type name,field,data) tuples
         '''
         if status_type is None:
             status_type = [x.name for x in self.status.data]

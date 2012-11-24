@@ -54,6 +54,7 @@ class GPGConfig(object):
 
 
     def __init__(self):
+        '''Class init function'''
         self.options = {
             'tasks': {}
         }
@@ -65,6 +66,7 @@ class GPGConfig(object):
 
 
     def _get_(self, key, subkey=None):
+        '''Class specific private get function'''
         if (key in self.options and not self.options[key] is None):
             if subkey:
                 if subkey in self.options[key]:
@@ -83,18 +85,28 @@ class GPGConfig(object):
             return self.defaults[key]
         return 'foo-bar\'d key'
 
+
     def get_key(self, key, subkey=None):
+        '''Returns a specified key or subkey value
+
+        @param key: string config default or config options key identifier
+        @param subkey: string (optional) config key's subkey identifier
+        @rtype specific to the key or subkey's value being retrieved
+        '''
         return self._get_(key, subkey)
 
 
     def get_defaults(self):
         '''Returns a dictionary of the default settings
+
+        @rtype dict
         '''
         return self._defaults.copy()
 
 
     def sign_modes(self, gpg_options=None):
-        '''Returns the list of supported signing types
+        '''Returns the list of supported signing types.
+
         @param gpg_options: list of gpg options such as those returned by
             GnuPG.dump_options(). If passed in, it will do a set intersection
             of the supported signing modes and gpg_options

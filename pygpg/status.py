@@ -30,11 +30,12 @@ from pygpg.legend import (
 
 
 class Status(object):
-    '''Decodes all status messages and
-    puts the relavent info into lists'''
+    '''Parses all status messages and
+    puts the relavent info into the various lists'''
 
 
     def __init__(self):
+        '''Class init function'''
         self.messages = []
         self.status_msgs = []
         self.data = []
@@ -42,6 +43,12 @@ class Status(object):
 
 
     def extract_data(self, messages):
+        '''Identifies the different message types and
+        calls the specifc processing function.
+
+        @param messages: list of string messages to parse
+        @rtype list: of stderr messages found
+        '''
         stderr_msgs = []
         self.messages = messages
         for msg in messages:
@@ -60,11 +67,22 @@ class Status(object):
 
     @staticmethod
     def isinstance_msg(identifier, msg):
+        '''Class specific message type comparision function
+
+        @param identifier: string
+        @param msg: string
+        @rtype bool
+        '''
         return identifier in msg
 
 
     @staticmethod
     def _split_message(msg):
+        '''Internal message splitting function
+
+        @param msg string
+        @rtype tuple: (status, parts, alerts)
+        '''
         # split it into [*_IDENTIFIER, key, data] parts
         # discard the *_IDENTIFIER
         # we are not yet spliting the actual data
@@ -99,6 +117,12 @@ class Status(object):
 
 
     def process_status_msg(self, msg):
+        '''Generic message processing function
+
+        @param msg: string
+        @modified self.data may be appended with additional data
+        @rtype None
+        '''
         self.status_msgs.append(msg)
         status, parts, alerts = self._split_message(msg)
         if status:
@@ -109,6 +133,13 @@ class Status(object):
 
 
     def process_pygpg_msg(self, message=None, parts=None, target=None):
+        '''Pygpg message processing function
+
+        @param msg: string (optional)
+        @param parts: list of strings
+        @param target: class variable to modify
+        @rtype None
+        '''
         if target is None:
             target = self.data
         if message is not None:
@@ -120,6 +151,12 @@ class Status(object):
 
 
     def process_gpg_ver(self, messages):
+        '''GPG message processing function
+
+        @param messages: list of strings
+        @modified self.data may be appended with additional data
+        @rtype None
+        '''
         msg_keys = ['gpg', 'libgcrypt', 'Copyright',
             'License', 'Home:', 'Pubkey:', 'Cipher:', 'Hash:', 'Compression:']
         parts = {}
