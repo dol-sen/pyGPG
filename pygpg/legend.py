@@ -28,6 +28,17 @@ PYGPG_IDENTIFIER = '[PyGPG:]'
 GPG_VER_IDENTFIER = 'gpg (GnuPG)'
 
 
+# define the common colon listing field names
+# field 1 is the record type, is not included in this list.
+# fields 2 - 15 of the colon listings are the data
+COLON_LISTING_FIELDS = ['validity', 'keylength', 'pubkey_algo', 'long_keyid',
+    'creation_date', 'expiredate', 'serial_num', 'ownertrust', 'user_ID',
+    'sig_class', 'key_capabilities', 'fingerprint', 'menu_flag', 'token_serial'
+]
+
+
+# Class definition tuples consisting of (Record tpye, [field list], message)
+# the classes will be generated on initialization of this file
 CLASSES = [
     ('NEWSIG', [], "Issued right before a signature verification starts."),
     ('GOODSIG', ['long_keyid', 'username'], "The signature with the keyid is good."),
@@ -257,11 +268,26 @@ The reasons codes currently in use are:
     ('PYGPG_ATTRIBUTE_ERROR', ['module', 'classname'], "ERROR retreiving class."),
     ('PYGPG_MESSAGE', ['message'], 'Generic mesage'),
     ('PYGPG_ERROR', ['error', 'function', 'message'], "Internal pyGPG error message, refer to the data's attributes for more detail"),
+
+## Colon record classes
+
+    ("PUB", COLON_LISTING_FIELDS[:11], "Public key"),
+    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingeprint'] + COLON_LISTING_FIELDS[10], "Fingerprint"),
+    ("UID", COLON_LISTING_FIELDS[:10], "User ID"),
+    ("SUB", COLON_LISTING_FIELDS[:11], "Subkey"),
+    ("SEC", COLON_LISTING_FIELDS, "Secret key"),
+    ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
+    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + COLON_LISTING_FIELDS[10], "User attribute"),
+    ("PKD", ['index', 'bitlength', 'value'], "Public key data"),
+    ("TRU", ['reason', 'model', 'db_created', 'db_expires', 'marginal_num', 'completely_num', 'max_depth'], "Trust database information"),
+    ("SPK", ['subpacket_num', 'flags', 'length', 'data'], "Signature subpacket"),
+    ("GRP", [], "Keygrip"),
+    ("RVK", [], "Revocation key"),
 ]
 
 
-# create the classes
 
+# create the status_fd, pyGPG and Colon listing classes
 for (name, fields, msg) in CLASSES:
     obj = locals()[name] = namedtuple(name, fields)
     #obj.name = snakeoil.klass.alias_attr('__class__.__name__')
