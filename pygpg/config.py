@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#
 # -*- coding: utf-8 -*-
 ####################
 # pyGPG Config
@@ -31,8 +31,11 @@ class GPGConfig(object):
         'clearsign': '--clearsign',
         'detach-sign': '--detach-sign',
         'dump-options': '--dump-options',
+        'fingerprint': '--fingerprint',
+        'list-key': '--list-key',
         'list-keys': '--list-keys',
         'list-secret-keys': '--list-secret-keys',
+        'search-keys': '--search-keys',
         'no-tty': '--no-tty',
         'version': '--version',
         # defaults added to each gpg process run
@@ -46,8 +49,11 @@ class GPGConfig(object):
             'clearsign': [],
             'detach-sign': [],
             'dump-options': [],
+            'fingerprint': [],
             'list-keys': ['--attribute-fd', '2'],
+            'list-key': ['--attribute-fd', '2'],
             'list-secret-keys': ['--attribute-fd', '2'],
+            'search-keys': [],
             'version': [],
         }
     }
@@ -56,7 +62,7 @@ class GPGConfig(object):
     def __init__(self):
         '''Class init function'''
         self.options = {
-            'tasks': {}
+            'tasks': None
         }
         self.unsupported = set()
 
@@ -101,7 +107,7 @@ class GPGConfig(object):
 
         @rtype dict
         '''
-        return self._defaults.copy()
+        return self.defaults.copy()
 
 
     def sign_modes(self, gpg_options=None):
