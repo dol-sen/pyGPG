@@ -31,13 +31,16 @@ def encode(text, enc="UTF-8"):
 class GPGResult(object):
     '''GnuPG process result handler'''
 
-    def __init__(self, gpg, results):
+    def __init__(self, gpg, results, extract_stdout=False):
         '''Class init function'''
         self.gpg = gpg
         self.output = results[0]
         self.stderr_out = results[1].split('\n')
         self.status = Status()
-        self.messages = self.status.extract_data(self.stderr_out)
+        if extract_stdout:
+            self.messages = self.status.extract_output(self.stderr_out)
+        else:
+            self.messages = self.status.extract_data(self.stderr_out)
 
 
     @property
