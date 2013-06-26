@@ -56,8 +56,10 @@ class GPG(object):
         gpg = None
         if not task:
             return None
-        args = [self.config['gpg_command']]
-        args.extend(self.config['gpg_defaults'])
+        args = [self.config.get_key('gpg_command')]
+        defaults = self.config.get_key('gpg_defaults')
+        #print("defaults =" + str(defaults))
+        args.extend(defaults)
         task_opts = self.config.get_key('tasks', task)
         if task_opts:
             args.extend(task_opts)
@@ -65,9 +67,10 @@ class GPG(object):
             args.extend(['-o',outputfile])
         args = [x for x in args if x != '']
         if inputtxt is None and inputfile is not None:
-                inputtxt = open('/dev/null', 'wb')
-                args.extend([self.config[task], inputfile])
-        if inputtxt and inputfile is not None:
+                inputtxt = '' #open('/dev/null', 'wb')
+                args.append(self.config[task])
+                args.append(inputfile)
+        elif inputtxt and inputfile is not None:
                 args.extend([self.config[task], inputfile, '-'])
         elif inputtxt is None:
             err = GPGResult(None, ['',''])
@@ -80,11 +83,27 @@ class GPG(object):
             args.append(self.config[task])
         # history is only for initial debugging
         #self.history.append(
-        print "Running gpg with: '%s'" % str(args)
+        #print "Running gpg with: '%s'" % str(args)
         gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
         results = gpg.communicate(inputtxt)
         #inputtxt.close()
+        if task in ['list-key', 'list-keys', 'fingerprint']:
+            return GPGResult(gpg, results, extract_stdout=True)
         return GPGResult(gpg, results)
+
+
+    def fingerprint(self, id_string=None, outputfile=None):
+        '''Lists the key, with the fingerprint
+
+        @param task: string, one of pygpg's config['tasks'].keys()
+        @param inputtxt: string (optional)  of text to send to gpg's stdin
+        @param inputfile: string (optional) a filepath to pass to gpg
+        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @rtype GnuPGResult object
+        '''
+        return self.runGPG('fingerprint', inputfile=id_string,
+            outputfile=outputfile)
+
 
 
     def decrypt(self, inputtxt=None, inputfile=None, outputfile=None):
