@@ -41,6 +41,8 @@ class GPGResult(object):
             self.messages = self.status.extract_output(self.stderr_out)
         else:
             self.messages = self.status.extract_data(self.stderr_out)
+        # set failed default, for use by consumer apps
+        self.failed = False
 
 
     @property
@@ -79,7 +81,14 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['long_keyid', 'long_main_keyid']
-        return self.get_data(fields)
+        r = self.get_data(fields)
+        if r:
+            return r
+        else:
+            r = self.fingerprint
+            if r is not 'None':
+                return "0x" + r[-16:]
+        return 'None'
 
 
     @property
@@ -99,7 +108,10 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['username']
-        return self.get_data(fields)
+        r = self.get_data(fields)
+        if len(r):
+            return r[0][2]
+        return 'None'
 
 
     @property
@@ -109,7 +121,10 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['fingerprint']
-        return self.get_data(fields)
+        r = self.get_data(fields)
+        if len(r):
+            return r[0][2]
+        return 'None'
 
 
     @property
