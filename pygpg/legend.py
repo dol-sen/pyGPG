@@ -272,12 +272,12 @@ The reasons codes currently in use are:
 ## Colon record classes
 
     ("PUB", COLON_LISTING_FIELDS[:11], "Public key"),
-    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingeprint'] + COLON_LISTING_FIELDS[10], "Fingerprint"),
+    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingeprint'] + [COLON_LISTING_FIELDS[10]], "Fingerprint"),
     ("UID", COLON_LISTING_FIELDS[:10], "User ID"),
     ("SUB", COLON_LISTING_FIELDS[:11], "Subkey"),
     ("SEC", COLON_LISTING_FIELDS, "Secret key"),
     ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
-    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + COLON_LISTING_FIELDS[10], "User attribute"),
+    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + [COLON_LISTING_FIELDS[10]], "User attribute"),
     ("PKD", ['index', 'bitlength', 'value'], "Public key data"),
     ("TRU", ['reason', 'model', 'db_created', 'db_expires', 'marginal_num', 'completely_num', 'max_depth'], "Trust database information"),
     ("SPK", ['subpacket_num', 'flags', 'length', 'data'], "Signature subpacket"),
