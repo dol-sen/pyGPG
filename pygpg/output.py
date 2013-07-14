@@ -38,7 +38,7 @@ class GPGResult(object):
         self.stderr_out = results[1].split('\n')
         self.status = Status()
         if extract_stdout:
-            self.messages = self.status.extract_output(self.stderr_out)
+            self.messages = self.status.extract_output(self.output)
         else:
             self.messages = self.status.extract_data(self.stderr_out)
         # set failed default, for use by consumer apps

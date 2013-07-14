@@ -53,9 +53,9 @@ class GPGConfig(object):
             'dump-options': [],
             'fingerprint': [],
             'import': [],
-            'list-keys': ['--attribute-fd', '2'],
-            'list-key': ['--attribute-fd', '2'],
-            'list-secret-keys': ['--attribute-fd', '2'],
+            'list-keys': ['--attribute-fd', '2', '--with-colons'],
+            'list-key': ['--attribute-fd', '2', '--with-colons'],
+            'list-secret-keys': ['--attribute-fd', '2', '--with-colons'],
             'recv-keys': [],
             'search-keys': [],
             'version': [],
@@ -84,16 +84,16 @@ class GPGConfig(object):
                 elif subkey in self.defaults[key]:
                     return self.defaults[key][subkey]
                 else:
-                    return 'foo-bar\'d subkey... options'
+                    return 'foo-bar\'d-subkey... options'
             return self.options[key] or self.defaults[key]
         elif key in self.defaults:
             if subkey:
                 if subkey in self.defaults[key]:
                     return self.defaults[key][subkey]
                 else:
-                    return 'foo-bar\'d subkey... defaults'
+                    return 'foo-bar\'d-subkey... defaults'
             return self.defaults[key]
-        return 'foo-bar\'d key'
+        return 'foo-bar\'d-key'
 
 
     def get_key(self, key, subkey=None):

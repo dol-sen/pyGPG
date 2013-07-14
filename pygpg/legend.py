@@ -26,6 +26,8 @@ from collections import namedtuple
 GPG_IDENTIFIER = '[GNUPG:]'
 PYGPG_IDENTIFIER = '[PyGPG:]'
 GPG_VER_IDENTFIER = 'gpg (GnuPG)'
+COLON_IDENTIFIERS = ["PUB", "FPR", "UID", "SUB", "SEC", "SSB", "UAT",
+    "PKD", "TRU", "SPK", "GRP", "RVK"]
 
 
 # define the common colon listing field names
@@ -271,10 +273,10 @@ The reasons codes currently in use are:
 
 ## Colon record classes
 
-    ("PUB", COLON_LISTING_FIELDS[:11], "Public key"),
+    ("PUB", COLON_LISTING_FIELDS[:12], "Public key"),
     ("FPR", COLON_LISTING_FIELDS[:8] + ['fingeprint'] + [COLON_LISTING_FIELDS[10]], "Fingerprint"),
     ("UID", COLON_LISTING_FIELDS[:10], "User ID"),
-    ("SUB", COLON_LISTING_FIELDS[:11], "Subkey"),
+    ("SUB", COLON_LISTING_FIELDS[:12], "Subkey"),
     ("SEC", COLON_LISTING_FIELDS, "Secret key"),
     ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
     ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + [COLON_LISTING_FIELDS[10]], "User attribute"),

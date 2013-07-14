@@ -25,7 +25,8 @@ from pygpg import legend
 from pygpg.legend import (
     GPG_IDENTIFIER,
     PYGPG_IDENTIFIER,
-    GPG_VER_IDENTFIER
+    GPG_VER_IDENTFIER,
+    COLON_IDENTIFIERS
 )
 
 
@@ -76,8 +77,7 @@ class Status(object):
         return identifier in msg
 
 
-    @staticmethod
-    def _split_message(msg):
+    def _split_message(self, msg):
         '''Internal message splitting function
 
         @param msg string
@@ -191,5 +191,39 @@ class Status(object):
         self.data.append(status._make(field_data))
 
 
+    def extract_output(self, messages):
+        '''Identifies the different message types and
+        calls the specifc processing function.
 
+        @param messages: list of string messages to parse
+        @rtype list: of unknown messages found
+        '''
+        msgs = []
+        self.messages = messages
+        #print "STATUS: processing messagess:", messages
+        for msg in messages.split('\n'):
+            #print "STATUS: processing msg:", msg
+            unknown = self.process_colon_listing(msg)
+            if unknown:
+                msgs.append(unknown)
+        #print "STATUS: data =", self.data
+        return msgs
+
+
+    def process_colon_listing(self, msg):
+        '''Generic message processing function
+
+        @param msg: string
+        @modified self.data may be appended with additional data
+        @rtype None
+        '''
+        self.status_msgs.append(msg)
+        parts = msg.split(':')
+        key = parts.pop(0).upper()
+        #print "STATUS: key", key, ", parts:", parts
+        if key in COLON_IDENTIFIERS:
+            status = getattr(legend, key)
+            self.data.append(status._make(parts))
+            return None
+        return msg
 
