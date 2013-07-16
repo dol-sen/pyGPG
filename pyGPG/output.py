@@ -18,7 +18,7 @@
 '''Handles pyGPG's gpg output.'''
 
 
-from pygpg.status import Status
+from pyGPG.status import Status
 
 
 def encode(text, enc="UTF-8"):

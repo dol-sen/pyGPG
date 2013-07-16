@@ -22,9 +22,9 @@ import os
 import copy
 from subprocess import Popen, PIPE
 
-from pygpg.output import GPGResult
-from pygpg.version import Version, License
-from pygpg.legend import PYGPG_IDENTIFIER
+from pyGPG.output import GPGResult
+from pyGPG.version import Version, License
+from pyGPG.legend import PYGPG_IDENTIFIER
 
 
 class GPG(object):

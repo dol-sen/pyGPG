@@ -7,8 +7,10 @@
 #
 
 
-from pygpg.config import GPGConfig
-from pygpg.gpg import GPG;c=GPGConfig()
+from pyGPG.config import GPGConfig
+from pyGPG.gpg import GPG
+
+c=GPGConfig()
 
 gpg=GPG(c)
 

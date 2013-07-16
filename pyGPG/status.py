@@ -20,9 +20,9 @@
 
 # import legend for getattr(legend, '{class}') use
 # that way we only retrieve the class(es) we actually need
-from pygpg import legend
+from pyGPG import legend
 
-from pygpg.legend import (
+from pyGPG.legend import (
     GPG_IDENTIFIER,
     PYGPG_IDENTIFIER,
     GPG_VER_IDENTFIER,
