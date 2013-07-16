@@ -1,5 +1,5 @@
 PyGPG  is a python interface wrapper for gnupg's gpg command.  It runs gpg and
-gathers data from the gpg's outputs, making that data availabe to python code
+gathers data from gpg's outputs, making that data availabe to python code
 consumers.
 
 It aims to provide a very flexible, reliable and secure method to integrate
@@ -21,3 +21,19 @@ action, and either text for stdin input or a filepath for it to process.
     verify, sign.  There are also version and options properties which return
     the information gleaned from running gpg.
 
+    Update: 20130706
+
+    I've renamed the python pygpg pkg to pyGPG the same as the project
+    name.  I did this for some consistency.  There is another pygpg project
+    started at about the same time as this one.  It's python pkg is named gpg,
+    so could be installed side by side with this one. It is different, and very
+    limited in it's capabilities.
+
+    There are a great many more task options available for gpg than I have added
+    to the config.  I have onlt added some basic task options that I have tested
+    myself.  You are welcome to add additional command options, test and send
+    them in to me for inclusion.
+
+    A more recent addition, is the ability for pyGPG to mine the colon listings
+    data output by using the --with-colons option.  It places the data obtained
+    into namedtuple classes just like the status_fd output.
