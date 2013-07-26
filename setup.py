@@ -7,7 +7,7 @@ from distutils.core import setup
 # this affects the names of all the directories we do stuff with
 sys.path.insert(0, './')
 
-from pygpg.version import Version, License
+from pyGPG.version import Version, License
 
 
 #__version__ = os.getenv('VERSION', default='9999')
