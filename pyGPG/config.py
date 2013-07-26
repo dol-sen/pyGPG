@@ -66,7 +66,7 @@ class GPGConfig(object):
     def __init__(self):
         '''Class init function'''
         self.options = {
-            'tasks': None
+            'tasks': {}
         }
         self.unsupported = set()
 
