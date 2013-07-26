@@ -30,12 +30,13 @@ from pyGPG.legend import PYGPG_IDENTIFIER
 class GPG(object):
     '''Subprocess gnupg handler class'''
 
-    def __init__(self, config):
+    def __init__(self, config, logger=None):
         '''Class init function
 
         @param config: GPGConfig config instance to use
         '''
         self.config = config
+        self.logger = logger
         self._gpg_version = None
         self._gpg_options = None
         self.history = []
@@ -58,7 +59,8 @@ class GPG(object):
             return None
         args = [self.config.get_key('gpg_command')]
         defaults = self.config.get_key('gpg_defaults')
-        #print("defaults =" + str(defaults))
+        if self.logger:
+            self.logger.debug("defaults =" + str(defaults))
         args.extend(defaults)
         task_opts = self.config.get_key('tasks', task)
         if task_opts:
@@ -83,7 +85,8 @@ class GPG(object):
             args.append(self.config[task])
         # history is only for initial debugging
         #self.history.append(
-        #print "Running gpg with: '%s'" % str(args)
+        if self.logger:
+            self.logger.debug("Running gpg with: '%s'" % str(args))
         gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
         results = gpg.communicate(inputtxt)
         #inputtxt.close()
