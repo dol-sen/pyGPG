@@ -1,4 +1,3 @@
+*.patch
 *.py[co]
 testpath
-*.patch
-pyGPG
