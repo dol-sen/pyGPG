@@ -19,6 +19,7 @@
 
 
 from pyGPG.status import Status
+from pyGPG.legend import FINGERPRINT_CLASSES
 
 
 def encode(text, enc="UTF-8"):
@@ -121,8 +122,10 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['fingerprint']
-        r = self.get_data(fields)
-        if len(r):
+        r = self.get_data(fields, FINGERPRINT_CLASSES)
+        if len(r) > 1:
+            return [x[2] for x in r if x[2]]
+        elif len(r):
             return r[0][2]
         return 'None'
 

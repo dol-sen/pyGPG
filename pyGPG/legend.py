@@ -38,6 +38,8 @@ COLON_LISTING_FIELDS = ['validity', 'keylength', 'pubkey_algo', 'long_keyid',
     'sig_class', 'key_capabilities', 'fingerprint', 'menu_flag', 'token_serial'
 ]
 
+FINGERPRINT_CLASSES = ['VALIDSIG', 'IMPORT_CHECK', 'IMPORT_OK', 'IMPORT_PROBLEM',
+    'KEY_CREATED', 'BACKUP_KEY_CREATED', 'FPR']
 
 # Class definition tuples consisting of (Record tpye, [field list], message)
 # the classes will be generated on initialization of this file
