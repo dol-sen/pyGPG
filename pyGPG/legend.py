@@ -274,7 +274,7 @@ The reasons codes currently in use are:
 ## Colon record classes
 
     ("PUB", COLON_LISTING_FIELDS[:12], "Public key"),
-    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingeprint'] + [COLON_LISTING_FIELDS[10]], "Fingerprint"),
+    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingerprint'] + [COLON_LISTING_FIELDS[10]], "Fingerprint"),
     ("UID", COLON_LISTING_FIELDS[:10], "User ID"),
     ("SUB", COLON_LISTING_FIELDS[:12], "Subkey"),
     ("SEC", COLON_LISTING_FIELDS, "Secret key"),
