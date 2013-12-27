@@ -22,8 +22,8 @@ import os
 import copy
 from subprocess import Popen, PIPE
 
+from pyGPG import __version__, __license__
 from pyGPG.output import GPGResult
-from pyGPG.version import Version, License
 from pyGPG.legend import PYGPG_IDENTIFIER
 
 
@@ -175,7 +175,7 @@ class GPG(object):
             # now do pygpg version
             # insert it as the first entry in status.data
             target = []
-            parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', Version, License]
+            parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', __version__, __license__]
             self._gpg_version.status.process_pygpg_msg(parts=parts, target=target)
             self._gpg_version.status.data.insert(0,target[0])
         data = self._gpg_version.status.data
