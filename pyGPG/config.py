@@ -49,7 +49,7 @@ class GPGConfig(object):
             'decrypt': [],
             'detach-sign': [],
             'dump-options': [],
-            'fingerprint': [],
+            'fingerprint': ['--attribute-fd', '2', '--with-colons'],
             'import': [],
             'list-keys': ['--attribute-fd', '2', '--with-colons'],
             'list-key': ['--attribute-fd', '2', '--with-colons'],
