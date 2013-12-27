@@ -10,7 +10,6 @@
 #
 # Copyright:
 #             (c) 2012 Brian Dolbec
-#             Distributed under the terms of the GNU General Public License v2
 #
 # Author(s):
 #             Brian Dolbec <dolsen@gentoo.org>
