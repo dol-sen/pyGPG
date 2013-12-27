@@ -24,11 +24,9 @@ class GPGConfig(object):
     for running the GnuPG class'''
 
     defaults = {
-        'gpg_command': '/usr/bin/gpg2',
-        'decrypt': '--decrypt',
-        'verify': '--verify',
-        'sign': '--sign',
         'clearsign': '--clearsign',
+        'decrypt': '--decrypt',
+        'gpg_command': '/usr/bin/gpg2',
         'detach-sign': '--detach-sign',
         'dump-options': '--dump-options',
         'fingerprint': '--fingerprint',
@@ -36,19 +34,19 @@ class GPGConfig(object):
         'list-key': '--list-key',
         'list-keys': '--list-keys',
         'list-secret-keys': '--list-secret-keys',
+        'no-tty': '--no-tty',
         'recv-keys': '--recv-keys',
         'search-keys': '--search-keys',
-        'no-tty': '--no-tty',
+        'sign': '--sign',
+        'verify': '--verify',
         'version': '--version',
         # defaults added to each gpg process run
         'gpg_defaults': ['--status-fd', '2', '--no-tty'],
         'only_usable': False,
         'refetch': False,
         'tasks': {
-            'decrypt': [],
-            'verify': [],
-            'sign': [],
             'clearsign': [],
+            'decrypt': [],
             'detach-sign': [],
             'dump-options': [],
             'fingerprint': [],
@@ -58,6 +56,8 @@ class GPGConfig(object):
             'list-secret-keys': ['--attribute-fd', '2', '--with-colons'],
             'recv-keys': [],
             'search-keys': [],
+            'sign': [],
+            'verify': [],
             'version': [],
         }
     }
