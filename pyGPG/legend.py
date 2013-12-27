@@ -38,8 +38,8 @@ COLON_LISTING_FIELDS = ['validity', 'keylength', 'pubkey_algo', 'long_keyid',
     'sig_class', 'key_capabilities', 'fingerprint', 'menu_flag', 'token_serial'
 ]
 
-FINGERPRINT_CLASSES = ['VALIDSIG', 'IMPORT_CHECK', 'IMPORT_OK', 'IMPORT_PROBLEM',
-    'KEY_CREATED', 'BACKUP_KEY_CREATED', 'FPR']
+FINGERPRINT_CLASSES = ['ATTRIBUTE', 'VALIDSIG', 'IMPORT_CHECK', 'IMPORT_OK',
+    'IMPORT_PROBLEM', 'KEY_CREATED', 'BACKUP_KEY_CREATED', 'FPR']
 
 # Class definition tuples consisting of (Record tpye, [field list], message)
 # the classes will be generated on initialization of this file
@@ -230,7 +230,7 @@ The reasons codes currently in use are:
     ('TRUNCATED', ['maxno'], "The output was truncated to MAXNO items."),
     ('ERROR', ['error_location', 'error_code', 'more'], "This is a generic error status message, it might be followed by error location specific data."),
     ('SUCCESS', ['location'], "Postive confirimation that an operation succeeded."),
-    ('ATTRIBUTE', ['fpr', 'octets', 'type', 'index', 'count', 'timestamp', 'expiredate', 'flags'],
+    ('ATTRIBUTE', ['fingerprint', 'octets', 'type', 'index', 'count', 'timestamp', 'expiredate', 'flags'],
         "This is one long line issued for each attribute subpacket when an attribute packet is seen during key listing."),
     ('CARDCTRL', ['what', 'serialno'],
 """This is used to control smartcard operations.
