@@ -37,3 +37,30 @@ action, and either text for stdin input or a filepath for it to process.
     A more recent addition, is the ability for pyGPG to mine the colon listings
     data output by using the --with-colons option.  It places the data obtained
     into namedtuple classes just like the status_fd output.
+
+
+quick example usage:
+
+brian@big_daddy ~/Dev/git/pyGPG $ python
+Python 2.7.5 (default, Nov 26 2013, 07:47:30)
+[GCC 4.6.4] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import pyGPG;from pyGPG.config import GPGConfig;c=GPGConfig();from pyGPG.gpg import GPG;g=GPG(c);c.options['tasks']['fingerprint'] = ['--attribute-fd', '2', '--with-colons'];r=g.fingerprint('dolsen@gentoo.org')
+>>> r
+<pyGPG.output.GPGResult object at 0x7f57a714c810>
+>>> r.status.data
+[TRU(reason='', model='1', db_created='1385327559', db_expires='0', marginal_num='3', completely_num='1', max_depth='5'), PUB(validity='-', keylength='2048', pubkey_algo='1', long_keyid='2214D90A014F17CB', creation_date='1267578490', expiredate='1393894470', serial_num='', ownertrust='-', user_ID='', sig_class='', key_capabilities='scESC', fingerprint=''), FPR(validity='', keylength='', pubkey_algo='', long_keyid='', creation_date='', expiredate='', serial_num='', ownertrust='', fingerprint='8688FD1CC71C1C04EAEA42372214D90A014F17CB', key_capabilities=''), UID(validity='-', keylength='', pubkey_algo='', long_keyid='', creation_date='1350795716', expiredate='', serial_num='168E5EBB59AFA46B7A26FCC95F377BCF26202C8B', ownertrust='', user_ID='Brian Dolbec <brian.dolbec@gmail.com>', sig_class=''), UID(validity='-', keylength='', pubkey_algo='', long_keyid='', creation_date='1350795605', expiredate='', serial_num='C25D1F20E350D3CB86FC477A74F5BBAFF2119B50', ownertrust='', user_ID='Brian Dolbec <dolsen@gentoo.org>', sig_class=''), UID(validity='-', keylength='', pubkey_algo='', long_keyid='', creation_date='1330822470', expiredate='', serial_num='F107C1F60159DD59F568B512EC20954A025C3423', ownertrust='', user_ID="Brian Dolbec (Yes it's really me. Although which one of me is another question.) <brian.dolbec@gmail.com>", sig_class=''), SUB(validity='-', keylength='2048', pubkey_algo='1', long_keyid='65E309F2189DB0B8', creation_date='1267578490', expiredate='1393895072', serial_num='', ownertrust='', user_ID='', sig_class='', key_capabilities='e', fingerprint='')]
+>>> r.fingerprint
+'8688FD1CC71C1C04EAEA42372214D90A014F17CB'
+>>> r.output
+"tru::1:1385327559:0:3:1:5\npub:-:2048:1:2214D90A014F17CB:1267578490:1393894470::-:::scESC:\nfpr:::::::::8688FD1CC71C1C04EAEA42372214D90A014F17CB:\nuid:-::::1350795716::168E5EBB59AFA46B7A26FCC95F377BCF26202C8B::Brian Dolbec <brian.dolbec@gmail.com>:\nuid:-::::1350795605::C25D1F20E350D3CB86FC477A74F5BBAFF2119B50::Brian Dolbec <dolsen@gentoo.org>:\nuid:-::::1330822470::F107C1F60159DD59F568B512EC20954A025C3423::Brian Dolbec (Yes it's really me. Although which one of me is another question.) <brian.dolbec@gmail.com>:\nsub:-:2048:1:65E309F2189DB0B8:1267578490:1393895072:::::e:\n"
+>>> print(r.output)
+tru::1:1385327559:0:3:1:5
+pub:-:2048:1:2214D90A014F17CB:1267578490:1393894470::-:::scESC:
+fpr:::::::::8688FD1CC71C1C04EAEA42372214D90A014F17CB:
+uid:-::::1350795716::168E5EBB59AFA46B7A26FCC95F377BCF26202C8B::Brian Dolbec <brian.dolbec@gmail.com>:
+uid:-::::1350795605::C25D1F20E350D3CB86FC477A74F5BBAFF2119B50::Brian Dolbec <dolsen@gentoo.org>:
+uid:-::::1330822470::F107C1F60159DD59F568B512EC20954A025C3423::Brian Dolbec (Yes it's really me. Although which one of me is another question.) <brian.dolbec@gmail.com>:
+sub:-:2048:1:65E309F2189DB0B8:1267578490:1393895072:::::e:
+
+>>>
