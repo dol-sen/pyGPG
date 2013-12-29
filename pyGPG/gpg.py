@@ -50,7 +50,8 @@ class GPG(object):
         @param task: string, one of pygpg's config['tasks'].keys()
         @param inputtxt: string (optional)  of text to send to gpg's stdin
         @param inputfile: string (optional) a filepath to pass to gpg
-        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
         @rtype GnuPGResult object
         '''
         results = ('', '') # null
@@ -66,19 +67,23 @@ class GPG(object):
         if task_opts:
             args.extend(task_opts)
         if outputfile:
-            args.extend(['-o',outputfile])
+            args.extend(['-o', outputfile])
         args = [x for x in args if x != '']
         if inputtxt is None and inputfile is not None:
-                inputtxt = '' #open('/dev/null', 'wb')
+                inputtxt = ''  # open('/dev/null', 'wb')
                 args.append(self.config[task])
                 args.append(inputfile)
         elif inputtxt and inputfile is not None:
                 args.extend([self.config[task], inputfile, '-'])
         elif inputtxt is None:
-            err = GPGResult(None, ['',''])
-            parts = [PYGPG_IDENTIFIER, 'PYGPG_ERROR',
-                'no-input-specified', 'GPG.runGPG()',
-                'You must pass in a non-None inputtxt or inputfile to process']
+            err = GPGResult(None, ['', ''])
+            parts = [
+                PYGPG_IDENTIFIER,
+                'PYGPG_ERROR',
+                'no-input-specified',
+                'GPG.runGPG()',
+                'You must pass in a non-None inputtxt or inputfile to process',
+                ]
             err.status.process_pygpg_msg(parts=parts)
             return err
         else:
@@ -91,7 +96,7 @@ class GPG(object):
         results = gpg.communicate(inputtxt)
         #inputtxt.close()
         if task in ['list-key', 'list-keys', 'fingerprint'] \
-            and '--with-colons' in self.config.get_key('tasks', task):
+                and '--with-colons' in self.config.get_key('tasks', task):
             return GPGResult(gpg, results, extract_stdout=True)
         return GPGResult(gpg, results)
 
@@ -102,13 +107,12 @@ class GPG(object):
         @param task: string, one of pygpg's config['tasks'].keys()
         @param inputtxt: string (optional)  of text to send to gpg's stdin
         @param inputfile: string (optional) a filepath to pass to gpg
-        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
         @rtype GnuPGResult object
         '''
         return self.runGPG('fingerprint', inputfile=id_string,
-            outputfile=outputfile)
-
-
+                           outputfile=outputfile)
 
     def decrypt(self, inputtxt=None, inputfile=None, outputfile=None):
         '''Decrypts the inputtxt block passed in
@@ -117,7 +121,8 @@ class GPG(object):
 
         @param inputtxt: string (optional)  of text to send to gpg's stdin
         @param inputfile: string (optional) a filepath to pass to gpg
-        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
         @rtype GnuPGResult object
         '''
         return self.runGPG('decrypt', inputtxt, inputfile, outputfile)
@@ -127,7 +132,8 @@ class GPG(object):
         '''
         @param inputtxt: string (optional)  of text to send to gpg's stdin
         @param inputfile: string (optional) a filepath to pass to gpg
-        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
         @rtype GnuPGResult object
         '''
         return self.runGPG('verify', inputtxt, inputfile, outputfile)
@@ -137,12 +143,13 @@ class GPG(object):
         '''
         @param inputtxt: string (optional)  of text to send to gpg's stdin
         @param inputfile: string (optional) a filepath to pass to gpg
-        @param outputfile: string (optional) filepath to pass to gpg for it's output
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
         @rtype GnuPGResult object
         '''
         if mode not in self.config.sign_modes():
             return GPGResult(None, '', 'pyGPG: Error, no/unsupported signing'
-                'mode passed in: %s\n' % mode)
+                             'mode passed in: %s\n' % mode)
         return self.runGPG(mode, inputtxt, inputfile, outputfile)
 
 
@@ -177,12 +184,13 @@ class GPG(object):
             target = []
             parts = [PYGPG_IDENTIFIER, 'PYGPG_VERSION', __version__, __license__]
             self._gpg_version.status.process_pygpg_msg(parts=parts, target=target)
-            self._gpg_version.status.data.insert(0,target[0])
+            self._gpg_version.status.data.insert(0, target[0])
         data = self._gpg_version.status.data
         if verbose:
             result = {}
             for x in data:
                 result[x.name] = x._asdict()
-        return {'pygpg':data[0].pygpg, 'gpg':data[1].gpg,
-            'libcrypt':data[1].libcrypt}
-
+        return {'pygpg': data[0].pygpg,
+                'gpg': data[1].gpg,
+                'libcrypt': data[1].libcrypt,
+                }

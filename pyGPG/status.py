@@ -91,8 +91,9 @@ class Status(object):
         try:
             status = getattr(legend, key)
         except AttributeError:
-            alerts.append((self.errors, [PYGPG_IDENTIFIER, 'PYGPG_ATTRIBUTE_ERROR',
-                legend, key]))
+            alerts.append(
+                (self.errors, [PYGPG_IDENTIFIER, 'PYGPG_ATTRIBUTE_ERROR',
+                               legend, key]))
             return (None, parts, alerts)
         # need to handle <username> fields that would split
         # into many parts instead of just the one
@@ -100,15 +101,16 @@ class Status(object):
         if num_fields != len(parts):
             #print 'field parts', parts
             if parts is not [] and len(parts) == 1:
-                parts = parts[0].split(' ', num_fields -1)
+                parts = parts[0].split(' ', num_fields - 1)
             missing = num_fields - len(parts)
             #print num_fields,missing, 'parts', parts
             while missing > 0:
                 parts.append(None)
                 missing -= 1
             if missing < 0:  # uh-oh too much info
-                alerts.append((self.errors, [PYGPG_IDENTIFIER, 'PYGPG_UNEXPECTED_DATA',
-                    key, str(status._fields), str(parts[missing:])]))
+                alerts.append(
+                    (self.errors, [PYGPG_IDENTIFIER, 'PYGPG_UNEXPECTED_DATA',
+                                   key, str(status._fields), str(parts[missing:])]))
                 # it's being logged, so trim off the extra
                 # to prevent a traceback
                 parts = parts[:missing]
@@ -157,10 +159,10 @@ class Status(object):
         @rtype None
         '''
         msg_keys = ['gpg', 'libgcrypt', 'Copyright',
-            'License', 'Home:', 'Pubkey:', 'Cipher:', 'Hash:', 'Compression:']
+                    'License', 'Home:', 'Pubkey:', 'Cipher:', 'Hash:', 'Compression:']
         parts = {}
         multiline = False
-        for msg in messages :
+        for msg in messages:
             #print msg
             if not msg:
                 #print '====>', 'skipping'

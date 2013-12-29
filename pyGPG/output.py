@@ -39,6 +39,7 @@ def encode(text, enc="UTF-8"):
 class GPGResult(object):
     '''GnuPG process result handler'''
 
+
     def __init__(self, gpg, results, extract_stdout=False):
         '''Class init function'''
         self.gpg = gpg
@@ -62,7 +63,7 @@ class GPGResult(object):
         '''
         good = ['GOODSIG', 'VALIDSIG', 'SIG_CREATED']
         trusts = ['TRUST_UNDEFINED', 'TRUST_NEVER', 'TRUST_MARGINAL',
-            'TRUST_FULLY', 'TRUST_ULTIMATE']
+                  'TRUST_FULLY', 'TRUST_ULTIMATE']
         valid = self.get_data(status_type=good) != []
         trust = self.get_data(status_type=trusts)
         if len(trust):
@@ -157,7 +158,7 @@ class GPGResult(object):
             return [(x.name, x._fields) for x in self.status.data]
         status_type = self._check_param_type(status_type)
         return [(x.name, x._fields)
-            for x in self.status.data if x.name in status_type]
+                for x in self.status.data if x.name in status_type]
 
 
     def get_data(self, fields=None, status_type=None):
