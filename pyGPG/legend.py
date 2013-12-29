@@ -20,7 +20,6 @@
 
 from collections import namedtuple
 
-#import snakeoil.klass
 
 # make this global, so is easy to change, and calculates only once
 GPG_IDENTIFIER = '[GNUPG:]'
@@ -294,8 +293,7 @@ The reasons codes currently in use are:
 # create the status_fd, pyGPG and Colon listing classes
 for (name, fields, msg) in CLASSES:
     obj = locals()[name] = namedtuple(name, fields)
-    #obj.name = snakeoil.klass.alias_attr('__class__.__name__')
-    obj.name = name #obj.__class__.__name__
+    obj.name = name
     obj.msg = msg
     obj.__slots__ = ()
 del obj
