@@ -18,6 +18,13 @@
 '''Handles pyGPG's gpg output.'''
 
 
+import sys
+if sys.hexversion >= 0x3000000:
+    _str = str
+else:
+    _str = basestring
+
+
 from pyGPG.status import Status
 from pyGPG.legend import FINGERPRINT_CLASSES
 
@@ -184,7 +191,7 @@ class GPGResult(object):
         converting a string to a list[string] if it is not already a list.
         produces and error message if it is any other type
         returns repos as list always"""
-        if isinstance(param, basestring):
+        if isinstance(param, _str):
             param = [param]
         # else assume it is an iterable, if not it will error
         return [encode(i) for i in param]
