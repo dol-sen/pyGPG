@@ -17,6 +17,7 @@
 #
 '''Handles pyGPG's config's.'''
 
+import re
 
 
 class GPGConfig(object):
@@ -69,6 +70,7 @@ class GPGConfig(object):
             'tasks': {}
         }
         self.unsupported = set()
+        self.sub_re = r'\%(.*)'
 
 
     def __getitem__(self, key):
@@ -80,19 +82,20 @@ class GPGConfig(object):
         if (key in self.options and not self.options[key] is None):
             if subkey:
                 if subkey in self.options[key]:
-                    return self.options[key][subkey]
+                    return self._sub_(self.options[key][subkey])
                 elif subkey in self.defaults[key]:
-                    return self.defaults[key][subkey]
+                    return self._sub_(self.defaults[key][subkey])
                 else:
                     return 'foo-bar\'d-subkey... options'
-            return self.options[key] or self.defaults[key]
+            return self._sub_(self.options[key]) or \
+                self._sub_(self.defaults[key])
         elif key in self.defaults:
             if subkey:
                 if subkey in self.defaults[key]:
-                    return self.defaults[key][subkey]
+                    return self._sub_(self.defaults[key][subkey])
                 else:
                     return 'foo-bar\'d-subkey... defaults'
-            return self.defaults[key]
+            return self._sub_(self.defaults[key])
         return 'foo-bar\'d-key'
 
 
@@ -127,3 +130,24 @@ class GPGConfig(object):
             return list(set(supported).intersection(gpg_options))
         return supported
 
+
+    def _sub_(self, data):
+        '''Return command that performs the
+        %(variable)s substitution at time of the call.
+        This allows for changing values dynamically
+
+        @param data: string
+        @return: string
+        '''
+        print("_SUB_()")
+        if re.match(self.sub_re, data):
+            try:
+                data = data % self.options
+            except KeyError:
+                pass
+        if re.match(self.sub_re, data):
+            try:
+                data = data % self.defaults
+            except KeyError:
+                pass
+        return data
