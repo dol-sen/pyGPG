@@ -134,12 +134,50 @@ class GPGConfig(object):
     def _sub_(self, data):
         '''Return command that performs the
         %(variable)s substitution at time of the call.
+        This allows for changing values dynamically.
+        This functions determines the data type and calls the
+        appropriate _sub_*().
+
+        @param data: unknown, one of string, dict, list, tuple
+        @return: data of the same type
+        '''
+        data_type = type(data)
+        # do some re.whatever() to extract {'str', 'dict', 'list', 'tuple'}
+        # from the  "<type 'str'>" value in data_type
+        # leave it hard coded to str temporaily
+        func = getattr(self, '_sub_%s' % ('str'))  # type_value)
+        return func(data)
+
+
+    def _sub_dict(self, data):
+        '''Return command that performs the
+        %(variable)s substitution at time of the call.
+        This allows for changing values dynamically
+
+        @param data: dictionary
+        @return: dictionary
+        '''
+        pass
+
+
+    def _sub_list(self, data):
+        '''Return command that performs the
+        %(variable)s substitution at time of the call.
+        This allows for changing values dynamically
+
+        @param data: list
+        @return: list
+        '''
+
+    def _sub_str(self, data):
+        '''Return command that performs the
+        %(variable)s substitution at time of the call.
         This allows for changing values dynamically
 
         @param data: string
         @return: string
         '''
-        print("_SUB_()")
+        print("_SUB_()", type(data), data)
         if re.match(self.sub_re, data):
             try:
                 data = data % self.options
@@ -151,3 +189,16 @@ class GPGConfig(object):
             except KeyError:
                 pass
         return data
+
+
+    def _sub_tuple(self, data):
+        '''Return command that performs the
+        %(variable)s substitution at time of the call.
+        This allows for changing values dynamically
+
+        @param data: tuple
+        @return: tuple
+        '''
+        pass
+
+
