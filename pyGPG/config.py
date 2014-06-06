@@ -71,7 +71,7 @@ class GPGConfig(object):
         }
         self.unsupported = set()
         self.sub_re = r'\%(.*)'
-
+        self.type_re = re.compile(r'(type)|[< >\']')
 
     def __getitem__(self, key):
         return self._get_(key)
@@ -142,10 +142,9 @@ class GPGConfig(object):
         @return: data of the same type
         '''
         data_type = type(data)
-        # do some re.whatever() to extract {'str', 'dict', 'list', 'tuple'}
-        # from the  "<type 'str'>" value in data_type
-        # leave it hard coded to str temporaily
-        func = getattr(self, '_sub_%s' % ('str'))  # type_value)
+        data_type = re.sub(self.type_re, '', str(data_type))
+
+        func = getattr(self, '_sub_%s' % data_type)
         return func(data)
 
 
@@ -157,7 +156,10 @@ class GPGConfig(object):
         @param data: dictionary
         @return: dictionary
         '''
-        pass
+        new = {}
+        for key, value in data.iteritems():
+            new[key] = self._sub_(value)
+        return new
 
 
     def _sub_list(self, data):
@@ -168,6 +170,10 @@ class GPGConfig(object):
         @param data: list
         @return: list
         '''
+        new = []
+        for member in data:
+            new.append(self._sub_(member))
+        return new
 
     def _sub_str(self, data):
         '''Return command that performs the
@@ -199,6 +205,9 @@ class GPGConfig(object):
         @param data: tuple
         @return: tuple
         '''
-        pass
+        new = []
+        for member in data:
+            new.append(self._sub_(member))
+        return tuple(new)
 
 
