@@ -143,6 +143,8 @@ class GPGConfig(object):
         '''
         data_type = type(data)
         data_type = re.sub(self.type_re, '', str(data_type))
+        if data_type not in ['dict', 'list', 'str', 'tuple']:
+            return data
 
         func = getattr(self, '_sub_%s' % data_type)
         return func(data)
