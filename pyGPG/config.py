@@ -185,7 +185,6 @@ class GPGConfig(object):
         @param data: string
         @return: string
         '''
-        print("_SUB_()", type(data), data)
         if re.match(self.sub_re, data):
             try:
                 data = data % self.options
