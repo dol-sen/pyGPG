@@ -56,7 +56,7 @@ class GPGResult(object):
 
     @property
     def verified(self):
-        '''Checks the output status data for goog or valid signatures
+        '''Checks the output status data for good or valid signatures
 
         @rtype tuple: (bool: verification staus,
             trust: legend.TRUST_* class instance or 'Unknown')
