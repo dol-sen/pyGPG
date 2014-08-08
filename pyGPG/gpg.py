@@ -69,12 +69,14 @@ class GPG(object):
         if outputfile:
             args.extend(['-o', outputfile])
         args = [x for x in args if x != '']
+        if inuputfile and isinstance(inputfile, str):
+            inputfile = [inputfile]
         if inputtxt is None and inputfile is not None:
                 inputtxt = ''  # open('/dev/null', 'wb')
                 args.append(self.config[task])
-                args.append(inputfile)
+                args += inputfile
         elif inputtxt and inputfile is not None:
-                args.extend([self.config[task], inputfile, '-'])
+                args += [self.config[task]] + inputfile + ['-']
         elif inputtxt is None:
             err = GPGResult(None, ['', ''])
             parts = [
