@@ -20,11 +20,17 @@ from __future__ import with_statement
 
 import os
 import copy
+import sys
 from subprocess import Popen, PIPE
 
 from pyGPG import __version__, __license__
 from pyGPG.output import GPGResult
 from pyGPG.legend import PYGPG_IDENTIFIER
+
+if sys.hexversion >= 0x30200f0:
+    STR = str
+else:
+    STR = basestring
 
 
 class GPG(object):
@@ -69,7 +75,7 @@ class GPG(object):
         if outputfile:
             args.extend(['-o', outputfile])
         args = [x for x in args if x != '']
-        if inuputfile and isinstance(inputfile, str):
+        if inputfile and isinstance(inputfile, STR):
             inputfile = [inputfile]
         if inputtxt is None and inputfile is not None:
                 inputtxt = ''  # open('/dev/null', 'wb')
