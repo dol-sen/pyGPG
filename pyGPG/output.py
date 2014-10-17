@@ -44,7 +44,11 @@ class GPGResult(object):
         '''Class init function'''
         self.gpg = gpg
         self.output = results[0]
-        self.stderr_out = results[1].split('\n')
+        self.stderr_out = results[1]
+        if sys.hexversion >= 0x3000000:
+            self.output = self.output.decode('UTF-8')
+            self.stderr_out = self.stderr_out.decode('UTF-8')
+        self.stderr_out = self.stderr_out.split('\n')
         self.status = Status()
         if extract_stdout:
             self.messages = self.status.extract_output(self.output)
