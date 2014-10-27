@@ -159,7 +159,7 @@ class GPGConfig(object):
         @return: dictionary
         '''
         new = {}
-        for key, value in data.items():
+        for key, value in list(data.items()):
             new[key] = self._sub_(value)
         return new
 

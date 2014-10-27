@@ -16,7 +16,7 @@
 #
 '''Handles running gnupg.'''
 
-from __future__ import with_statement
+
 
 import os
 import copy
