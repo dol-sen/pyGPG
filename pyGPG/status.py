@@ -219,7 +219,7 @@ class Status(object):
         @rtype None
         '''
         self.status_msgs.append(msg)
-        parts = msg.split(':')
+        parts = msg.split(':')[:13]
         key = parts.pop(0).upper()
         #print "STATUS: key", key, ", parts:", parts
         if key in COLON_IDENTIFIERS:
