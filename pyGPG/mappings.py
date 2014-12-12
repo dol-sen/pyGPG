@@ -54,6 +54,9 @@ VALIDITY_MAP = {
     'u': 'Ultimately valid',
 }
 
+INVALID_LIST = ['i', 'd', 'r', 'e']
+VALID_LIST = ['o', '-', 'q', 'n', 'm', 'f', 'u']
+
 KEY_VERSION_FPR_LEN = {
     32: '3',
     40: '4',
