@@ -47,15 +47,20 @@ class GPGResult(object):
         self.gpg = gpg
         self.output = results[0]
         self.stderr_out = results[1]
+        self.decode_errors = []
         if sys.version_info[0] >= 3:
-            for encoding in ['UTF-8', 'UTF-16']:
-                try:
-                    self.output = self.output.decode(encoding)
-                    self.stderr_out = self.stderr_out.decode(encoding)
-                    break
-                except:
-                    pass
-        self.stderr_out = _unicode(self.stderr_out).split('\n')
+            try:
+                self.output = self.output.decode('UTF-8')
+                self.stderr_out = self.stderr_out.decode('UTF-8')
+            except UnicodeDecodeError:
+                self.decode_errors.append("pyGPG.output(): Error decoding gpg output with utf-8")
+                self.decode_errors.append(self.output)
+                self.decode_errors.append(self.stderr_out)
+                self.status = Status()
+                self.failed = True
+                return
+            self.stderr_out = _unicode(self.stderr_out)
+        self.stderr_out = self.stderr_out.split('\n')
         self.status = Status()
         if extract_stdout:
             self.messages = self.status.extract_output(self.output)
