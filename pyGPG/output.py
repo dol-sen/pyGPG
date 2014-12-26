@@ -19,10 +19,12 @@
 
 
 import sys
-if sys.hexversion >= 0x3000000:
+if sys.version_info[0] >= 3:
     _str = str
+    _unicode = str
 else:
     _str = basestring
+    _unicode = unicode
 
 
 from pyGPG.status import Status
@@ -45,10 +47,15 @@ class GPGResult(object):
         self.gpg = gpg
         self.output = results[0]
         self.stderr_out = results[1]
-        if sys.hexversion >= 0x3000000:
-            self.output = self.output.decode('UTF-8')
-            self.stderr_out = self.stderr_out.decode('UTF-8')
-        self.stderr_out = self.stderr_out.split('\n')
+        if sys.version_info[0] >= 3:
+            for encoding in ['UTF-8', 'UTF-16']:
+                try:
+                    self.output = self.output.decode(encoding)
+                    self.stderr_out = self.stderr_out.decode(encoding)
+                    break
+                except:
+                    pass
+        self.stderr_out = _unicode(self.stderr_out).split('\n')
         self.status = Status()
         if extract_stdout:
             self.messages = self.status.extract_output(self.output)

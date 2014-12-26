@@ -16,6 +16,12 @@
 #
 '''Handles pyGPG's gpg status output.'''
 
+import sys
+if sys.version_info[0] >= 3:
+    _unicode = str
+else:
+    _unicode = unicode
+
 
 # import legend for getattr(legend, '{class}') use
 # that way we only retrieve the class(es) we actually need
@@ -202,7 +208,7 @@ class Status(object):
         msgs = []
         self.messages = messages
         #print "STATUS: processing messagess:", messages
-        for msg in messages.split('\n'):
+        for msg in _unicode(messages).split('\n'):
             #print "STATUS: processing msg:", msg
             unknown = self.process_colon_listing(msg)
             if unknown:
