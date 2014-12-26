@@ -43,7 +43,8 @@ class GPGConfig(object):
         'verify': '--verify',
         'version': '--version',
         # defaults added to each gpg process run
-        'gpg_defaults': ['--status-fd', '2', '--no-tty'],
+        'gpg_defaults': ['--display-charset', 'utf-8', '--status-fd', '2',
+            '--no-tty'],
         'only_usable': False,
         'refetch': False,
         'tasks': {
