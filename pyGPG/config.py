@@ -187,17 +187,18 @@ class GPGConfig(object):
         @param data: string
         @return: string
         '''
+        data2 = None
         if re.match(self.sub_re, data):
             try:
-                data = data % self.options
+                data2 = data % self.options
             except KeyError:
                 pass
         if re.match(self.sub_re, data):
             try:
-                data = data % self.defaults
+                data2 = data % self.defaults
             except KeyError:
                 pass
-        return data
+        return data2 or data
 
 
     def _sub_tuple(self, data):
