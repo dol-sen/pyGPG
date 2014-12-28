@@ -103,7 +103,7 @@ class GPG(object):
         gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
         results = gpg.communicate(inputtxt)
         #inputtxt.close()
-        if task in ['list-key', 'list-keys', 'fingerprint'] \
+        if task in ['list-key', 'list-keys', 'fingerprint', 'refresh-keys'] \
                 and '--with-colons' in self.config.get_key('tasks', task):
             return GPGResult(gpg, results, extract_stdout=True)
         return GPGResult(gpg, results)

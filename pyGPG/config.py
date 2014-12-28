@@ -58,7 +58,7 @@ class GPGConfig(object):
             'list-key': ['--attribute-fd', '2'],
             'list-secret-keys': ['--attribute-fd', '2'],
             'recv-keys': [],
-            'refresh-keys': [],
+            'refresh-keys': ['--with-colons'],
             'search-keys': [],
             'sign': [],
             'verify': [],
