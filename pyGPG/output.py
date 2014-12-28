@@ -163,6 +163,21 @@ class GPGResult(object):
         return self.gpg.returncode
 
 
+    @property
+    def no_pubkey(self):
+        '''Checks the output status data for a NO_PUBKEY result.
+
+        This indicates it failed to find the correct signature
+        in the keyring
+
+        @rtype tuple: (bool, keyid)
+        '''
+        pub_key = self.get_data(status_type=['NO_PUBKEY'])
+        if pub_key:
+            return (True, pub_key[0].long_keyid)
+        return (False, None)
+
+
     def get_fields(self, status_type=None):
         '''get a list of (type name,fields) tuples available from the gpg run
 
