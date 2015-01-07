@@ -27,7 +27,7 @@ class GPGConfig(object):
     defaults = {
         'clearsign': '--clearsign',
         'decrypt': '--decrypt',
-        'gpg_command': '/usr/bin/gpg2',
+        'gpg_command': '/usr/bin/gpg',
         'detach-sign': '--detach-sign',
         'dump-options': '--dump-options',
         'fingerprint': '--fingerprint',
