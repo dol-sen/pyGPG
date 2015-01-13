@@ -16,37 +16,18 @@
 #
 '''Handles pyGPG's gpg status output.'''
 
+import codecs
 import sys
 
 if sys.version_info[0] >= 3:
+    def decoder(text, enc='utf_8'):
+        return text
+
     # pylint: disable=W0622
     basestring = str
-
-    def _unicode_encode(s, encoding='utf_8', errors='backslashreplace'):
-        if isinstance(s, str):
-            s = s.encode(encoding, errors)
-        return s
-
-    def _unicode_decode(s, encoding='utf_8', errors='replace'):
-        if isinstance(s, bytes):
-            s = str(s, encoding=encoding, errors=errors)
-        return s
-
-    _unicode = str
-
 else:
-
-    def _unicode_encode(s, encoding='utf_8', errors='backslashreplace'):
-        if isinstance(s, unicode):
-            s = s.encode(encoding, errors)
-        return s
-
-    def _unicode_decode(s, encoding='utf_8', errors='replace'):
-        if isinstance(s, bytes):
-            s = unicode(s, encoding=encoding, errors=errors)
-        return s
-
-    _unicode = basestring
+    def decoder(text, enc='utf_8'):
+        return codecs.decode(text, enc)
 
 
 # import legend for getattr(legend, '{class}') use
@@ -234,7 +215,7 @@ class Status(object):
         msgs = []
         self.messages = messages
         #print "STATUS: processing messagess:", messages
-        for msg in _unicode_decode(messages).split('\n'):
+        for msg in decoder(messages).split('\n'):
             #print "STATUS: processing msg:", msg
             unknown = self.process_colon_listing(msg)
             if unknown:
