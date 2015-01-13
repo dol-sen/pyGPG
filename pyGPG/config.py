@@ -27,10 +27,11 @@ class GPGConfig(object):
     defaults = {
         'clearsign': '--clearsign',
         'decrypt': '--decrypt',
-        'gpg_command': '/usr/bin/gpg',
+        'delete-keys': '--delete-keys',
         'detach-sign': '--detach-sign',
         'dump-options': '--dump-options',
         'fingerprint': '--fingerprint',
+        'gpg_command': '/usr/bin/gpg',
         'import': '--import',
         'list-key': '--list-key',
         'list-keys': '--list-keys',
@@ -50,6 +51,7 @@ class GPGConfig(object):
         'tasks': {
             'clearsign': [],
             'decrypt': [],
+            'delete-keys': [],
             'detach-sign': [],
             'dump-options': [],
             'fingerprint': ['--attribute-fd', '2'],
