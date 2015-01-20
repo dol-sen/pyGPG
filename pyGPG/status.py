@@ -27,7 +27,7 @@ if sys.version_info[0] >= 3:
     basestring = str
 else:
     def decoder(text, enc='utf_8'):
-        return codecs.decode(text, enc)
+        return codecs.decode(text, enc, 'replace')
 
 
 # import legend for getattr(legend, '{class}') use
