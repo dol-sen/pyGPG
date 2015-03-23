@@ -16,7 +16,6 @@
 #
 '''Handles pyGPG's gpg status output.'''
 
-import codecs
 import sys
 
 if sys.version_info[0] >= 3:
@@ -27,7 +26,7 @@ if sys.version_info[0] >= 3:
     basestring = str
 else:
     def decoder(text, enc='utf_8'):
-        return codecs.decode(text, enc, 'replace')
+        return unicode(text)
 
 
 # import legend for getattr(legend, '{class}') use
