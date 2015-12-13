@@ -65,7 +65,8 @@ class GPGConfig(object):
             'sign': [],
             'verify': [],
             'version': [],
-        }
+        },
+        'trust-models': ['always', 'auto', 'classic', 'direct', 'pgp'],
     }
 
 
