@@ -91,7 +91,7 @@ class GPGConfig(object):
                 elif subkey in self.defaults[key]:
                     return self._sub_(self.defaults[key][subkey])
                 else:
-                    return 'foo-bar\'d-subkey... options'
+                    return None
             return self._sub_(self.options[key]) or \
                 self._sub_(self.defaults[key])
         elif key in self.defaults:
@@ -99,9 +99,10 @@ class GPGConfig(object):
                 if subkey in self.defaults[key]:
                     return self._sub_(self.defaults[key][subkey])
                 else:
-                    return 'foo-bar\'d-subkey... defaults'
+                    return None
             return self._sub_(self.defaults[key])
-        return 'foo-bar\'d-key'
+        print("NOT found", key, subkey)
+        return None
 
 
     def get_key(self, key, subkey=None):
