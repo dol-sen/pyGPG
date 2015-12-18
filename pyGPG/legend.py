@@ -280,7 +280,7 @@ The reasons codes currently in use are:
     ("SUB", COLON_LISTING_FIELDS[:12], "Subkey"),
     ("SEC", COLON_LISTING_FIELDS, "Secret key"),
     ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
-    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + COLON_LISTING_FIELDS[10:12], "User attribute"),
+    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + COLON_LISTING_FIELDS[10:13], "User attribute"),
     ("PKD", ['index', 'bitlength', 'value'], "Public key data"),
     ("TRU", ['reason', 'model', 'db_created', 'db_expires', 'marginal_num', 'completely_num', 'max_depth'], "Trust database information"),
     ("SPK", ['subpacket_num', 'flags', 'length', 'data'], "Signature subpacket"),
