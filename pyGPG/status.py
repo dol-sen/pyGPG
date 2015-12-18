@@ -177,7 +177,7 @@ class Status(object):
         for msg in messages:
             #print msg
             if not msg:
-                #print '====>', 'skipping'
+                #print('====>', 'skipping')
                 continue
             if multiline:
                 #print '====>', 'multiline'
@@ -199,9 +199,14 @@ class Status(object):
         # store the data in the correct order
         field_data = []
         for k in msg_keys:
-            field_data.append(parts[k])
-        status = getattr(legend, 'GPG_VERSION')
-        self.data.append(status._make(field_data))
+            try:
+                field_data.append(parts[k])
+            except KeyError:
+                #print("k", k, "parts", parts)
+                pass
+        if field_data:
+            status = getattr(legend, 'GPG_VERSION')
+            self.data.append(status._make(field_data))
 
 
     def extract_output(self, messages):
@@ -233,9 +238,11 @@ class Status(object):
         self.status_msgs.append(msg)
         parts = msg.split(':')[:13]
         key = parts.pop(0).upper()
-        #print "STATUS: key", key, ", parts:", parts
+        #print("STATUS: key", key, ", parts:", parts)
         if key in COLON_IDENTIFIERS:
             status = getattr(legend, key)
+            if key in ["UID", "UAT"] and len(parts)==10:
+                parts.extend(['', ''])
             self.data.append(status._make(parts))
             return None
         return msg
