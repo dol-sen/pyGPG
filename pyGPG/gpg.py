@@ -102,6 +102,9 @@ class GPG(object):
             self.logger.debug("Running gpg with: '%s'" % str(args))
         gpg = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
         results = gpg.communicate(inputtxt)
+        for pipe in (gpg.stdin, gpg.stdout, gpg.stderr):
+            if pipe:
+                pipe.close()
         #inputtxt.close()
         if task in ['list-key', 'list-keys', 'fingerprint', 'refresh-keys'] \
                 and '--with-colons' in self.config.get_key('tasks', task):
