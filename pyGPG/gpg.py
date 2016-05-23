@@ -111,6 +111,27 @@ class GPG(object):
             return GPGResult(gpg, results, extract_stdout=True)
         return GPGResult(gpg, results)
 
+    def listkey(self, id_string=None, outputfile=None):
+        '''Lists the keys with --list-key <argument>
+
+        @param id_string: string (optional) argument to --list-key
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
+        @rtype GnuPGResult object
+        '''
+        return self.runGPG('list-key', inputfile=id_string,
+                           outputfile=outputfile)
+
+    def listkeys(self, id_string=None, outputfile=None):
+        '''Lists the keys with --list-keys <argument>
+
+        @param id_string: string (optional) argument to --list-keys
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
+        @rtype GnuPGResult object
+        '''
+        return self.runGPG('list-keys', inputfile=id_string,
+                           outputfile=outputfile)
 
     def fingerprint(self, id_string=None, outputfile=None):
         '''Lists the key, with the fingerprint
