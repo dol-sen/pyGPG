@@ -25,16 +25,17 @@ from collections import namedtuple
 GPG_IDENTIFIER = '[GNUPG:]'
 PYGPG_IDENTIFIER = '[PyGPG:]'
 GPG_VER_IDENTFIER = 'gpg (GnuPG)'
-COLON_IDENTIFIERS = ["PUB", "FPR", "UID", "SUB", "SEC", "SSB", "UAT",
-    "PKD", "TRU", "SPK", "GRP", "RVK"]
-
+COLON_IDENTIFIERS = ['CFG', 'CRS', 'CRT', 'FPR', 'GRP', 'PKD', 'PUB', 'REV',
+                     'RVK', 'SEC', 'SIG', 'SPK', 'SSB', 'SUB', 'TRU', 'UAT',
+                     'UID']
 
 # define the common colon listing field names
 # field 1 is the record type, is not included in this list.
 # fields 2 - 15 of the colon listings are the data
 COLON_LISTING_FIELDS = ['validity', 'keylength', 'pubkey_algo', 'long_keyid',
     'creation_date', 'expiredate', 'serial_num', 'ownertrust', 'user_ID',
-    'sig_class', 'key_capabilities', 'fingerprint', 'menu_flag', 'token_serial'
+    'sig_class', 'key_capabilities', 'fingerprint', 'menu_flag',
+    'token_serial', 'hash_algorithm', 'ecc_curve', 'tofu_policy'
 ]
 
 FINGERPRINT_CLASSES = ['ATTRIBUTE', 'VALIDSIG', 'IMPORT_CHECK', 'IMPORT_OK',
@@ -272,20 +273,27 @@ The reasons codes currently in use are:
     ('PYGPG_MESSAGE', ['message'], 'Generic mesage'),
     ('PYGPG_ERROR', ['error', 'function', 'message'], "Internal pyGPG error message, refer to the data's attributes for more detail"),
 
-## Colon record classes
 
-    ("PUB", COLON_LISTING_FIELDS[:12], "Public key"),
-    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingerprint'] + [COLON_LISTING_FIELDS[10]], "Fingerprint"),
-    ("UID", COLON_LISTING_FIELDS[:12], "User ID"),
-    ("SUB", COLON_LISTING_FIELDS[:12], "Subkey"),
-    ("SEC", COLON_LISTING_FIELDS, "Secret key"),
-    ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
-    ("UAT", COLON_LISTING_FIELDS[:8] + ['signature'] + COLON_LISTING_FIELDS[10:13], "User attribute"),
+## Colon record classes (for special identifiers)
+    ("CFG", ['cfg_name', 'cfg_value'], "Configuration data"),
     ("PKD", ['index', 'bitlength', 'value'], "Public key data"),
-    ("TRU", ['reason', 'model', 'db_created', 'db_expires', 'marginal_num', 'completely_num', 'max_depth'], "Trust database information"),
     ("SPK", ['subpacket_num', 'flags', 'length', 'data'], "Signature subpacket"),
-    ("GRP", [], "Keygrip"),
-    ("RVK", [], "Revocation key"),
+    ("TRU", ['reason', 'model', 'db_created', 'db_expires', 'marginal_num', 'completely_num', 'max_depth'], "Trust database information"),
+
+## Colon record classes (for non-special identifiers)
+    ("CRS", COLON_LISTING_FIELDS, "x.509 certificate and private key"),
+    ("CRT", COLON_LISTING_FIELDS, "x.509 certificate"),
+    ("FPR", COLON_LISTING_FIELDS, "Fingerprint"),
+    ("GRP", COLON_LISTING_FIELDS, "Keygrip"),
+    ("PUB", COLON_LISTING_FIELDS, "Public key"),
+    ("REV", COLON_LISTING_FIELDS, "Revocation signature"),
+    ("RVK", COLON_LISTING_FIELDS, "Revocation key"),
+    ("SEC", COLON_LISTING_FIELDS, "Secret key"),
+    ("SIG", COLON_LISTING_FIELDS, "Signature"),
+    ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
+    ("SUB", COLON_LISTING_FIELDS, "Subkey"),
+    ("UAT", COLON_LISTING_FIELDS, "User attribute"),
+    ("UID", COLON_LISTING_FIELDS, "User ID"),
 ]
 
 

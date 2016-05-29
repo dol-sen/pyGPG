@@ -236,14 +236,25 @@ class Status(object):
         @rtype None
         '''
         self.status_msgs.append(msg)
-        parts = msg.split(':')[:13]
+        parts = msg.split(':')
         key = parts.pop(0).upper()
         #print("STATUS: key", key, ", parts:", parts)
+
         if key in COLON_IDENTIFIERS:
             status = getattr(legend, key)
-            if key in ["UID", "UAT"] and len(parts)==10:
-                parts.extend(['', ''])
+            length_difference = len(parts) - len(status._fields)
+
+            if length_difference > 0:
+                # Output has more fields than our library.
+                # Library needs to be updated with new fields.
+                parts = parts[:-length_difference]
+            elif length_difference < 0:
+                # Output is from an earlier version of gpg.
+                # We will set as many fields as possible. Rest empty.
+                parts.extend(-length_difference * [''])
+
+            # Number of fields in parts is equal to status class now.
+            # print status._make(parts)
             self.data.append(status._make(parts))
             return None
         return msg
-
