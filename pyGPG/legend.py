@@ -283,7 +283,6 @@ The reasons codes currently in use are:
 ## Colon record classes (for non-special identifiers)
     ("CRS", COLON_LISTING_FIELDS, "x.509 certificate and private key"),
     ("CRT", COLON_LISTING_FIELDS, "x.509 certificate"),
-    ("FPR", COLON_LISTING_FIELDS, "Fingerprint"),
     ("GRP", COLON_LISTING_FIELDS, "Keygrip"),
     ("PUB", COLON_LISTING_FIELDS, "Public key"),
     ("REV", COLON_LISTING_FIELDS, "Revocation signature"),
@@ -292,8 +291,10 @@ The reasons codes currently in use are:
     ("SIG", COLON_LISTING_FIELDS, "Signature"),
     ("SSB", COLON_LISTING_FIELDS, "Secret subkey"),
     ("SUB", COLON_LISTING_FIELDS, "Subkey"),
-    ("UAT", COLON_LISTING_FIELDS, "User attribute"),
     ("UID", COLON_LISTING_FIELDS, "User ID"),
+## Although not special, some records have inconsistent behaviour with other records. We handle them here.
+    ("FPR", COLON_LISTING_FIELDS[:8] + ['fingerprint'] + COLON_LISTING_FIELDS[9:11] + ['issuer_fingerprint'] + COLON_LISTING_FIELDS[12:], "Fingerprint"),
+    ("UAT", COLON_LISTING_FIELDS[:8] + ['attribute_subpacket'] + COLON_LISTING_FIELDS[10:], "User attribute"),
 ]
 
 
