@@ -111,6 +111,53 @@ class GPG(object):
             return GPGResult(gpg, results, extract_stdout=True)
         return GPGResult(gpg, results)
 
+<<<<<<< HEAD
+=======
+    def runGPG2(self, task=None, inputtxt=None, *args):
+        '''Creates, opens and runs the gpg subprocess,
+        you must pass in at least one of either inputtxt or inputfile
+
+        @param task: string, one of pygpg's config['tasks'].keys()
+        @param inputtxt: string (optional)  of text to send to gpg's stdin
+        @param inputfile: string (optional) a filepath to pass to gpg
+        @param outputfile: string (optional) filepath to pass to
+                           gpg for it's output
+        @rtype GnuPGResult object
+        '''
+        results = ('', '') # null
+        gpg = None
+        if not task:
+            return None
+        args2 = [self.config.get_key('gpg_command')]
+        defaults = self.config.get_key('gpg_defaults')
+        if self.logger:
+            self.logger.debug("defaults =" + str(defaults))
+        args2.extend(defaults)
+        args2.extend(args)
+
+        args2 = [x for x in args2 if x != '']
+
+        args2.append(self.config[task])
+
+        # history is only for initial debugging
+        #self.history.append(
+        if self.logger:
+            self.logger.debug("Running gpg with: '%s'" % str(args2))
+        gpg = Popen(args2, stdin=PIPE, stdout=PIPE, stderr=PIPE, env=self.env)
+
+        if self.logger:
+            self.logger.debug("inputtxt '%s'" % str(inputtxt))
+
+        results = gpg.communicate(inputtxt)
+        for pipe in (gpg.stdin, gpg.stdout, gpg.stderr):
+            if pipe:
+                pipe.close()
+        if self.logger:
+            self.logger.debug("results '%s'" % str(results))
+
+        return GPGResult(gpg, results)
+
+>>>>>>> e65b4e2... my version
     def listkey(self, id_string=None, outputfile=None):
         '''Lists the keys with --list-key <argument>
 
@@ -122,6 +169,20 @@ class GPG(object):
         return self.runGPG('list-key', inputfile=id_string,
                            outputfile=outputfile)
 
+<<<<<<< HEAD
+=======
+    def importkey(self, inputfile=None):
+        '''Import keys with --import <inputfile>
+
+        @param inputfile: string filepath to pass to
+                           gpg for the key to import
+        @rtype GnuPGResult object
+        '''
+        return self.runGPG('import', inputfile=inputfile,
+                           #outputfile=outputfile
+        )
+
+>>>>>>> e65b4e2... my version
     def listkeys(self, id_string=None, outputfile=None):
         '''Lists the keys with --list-keys <argument>
 
@@ -159,6 +220,18 @@ class GPG(object):
         '''
         return self.runGPG('decrypt', inputtxt, inputfile, outputfile)
 
+<<<<<<< HEAD
+=======
+    def encrypt(self, inputtxt, recipient):
+        '''encrypts the inputtxt block passed in
+        and/or returns the decrypted as GPGResult.output
+
+        @param inputtxt: string (optional)  of text to send to gpg's stdin
+        @rtype GnuPGResult object
+        '''
+        return self.runGPG2('encrypt', inputtxt, '--recipient',recipient, '--trust-mode', 'always', '--armor')
+
+>>>>>>> e65b4e2... my version
 
     def verify(self, inputtxt=None, inputfile=None, outputfile=None):
         '''

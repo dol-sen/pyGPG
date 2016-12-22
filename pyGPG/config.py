@@ -27,11 +27,19 @@ class GPGConfig(object):
     defaults = {
         'clearsign': '--clearsign',
         'decrypt': '--decrypt',
+<<<<<<< HEAD
+=======
+        'encrypt': '--encrypt',
+>>>>>>> e65b4e2... my version
         'delete-keys': '--delete-keys',
         'detach-sign': '--detach-sign',
         'dump-options': '--dump-options',
         'fingerprint': '--fingerprint',
+<<<<<<< HEAD
         'gpg_command': '/usr/bin/gpg',
+=======
+        'gpg_command': '/usr/pkg/bin/gpg',
+>>>>>>> e65b4e2... my version
         'import': '--import',
         'list-key': '--list-key',
         'list-keys': '--list-keys',
@@ -46,12 +54,20 @@ class GPGConfig(object):
         'version': '--version',
         # defaults added to each gpg process run
         'gpg_defaults': ['--display-charset', 'utf-8', '--status-fd', '2',
+<<<<<<< HEAD
             '--no-tty'],
+=======
+                         '--no-tty', '--home', '/sdf/arpa/gm/h/h4ck3rm1k3/html/gpghome'],
+>>>>>>> e65b4e2... my version
         'only_usable': False,
         'refetch': False,
         'tasks': {
             'clearsign': [],
             'decrypt': [],
+<<<<<<< HEAD
+=======
+            'encrypt': [],
+>>>>>>> e65b4e2... my version
             'delete-keys': [],
             'detach-sign': [],
             'dump-options': [],
