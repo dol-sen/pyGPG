@@ -138,7 +138,7 @@ class GPG(object):
         args2 = [x for x in args2 if x != '']
 
         args2.append(self.config[task])
-        
+
         # history is only for initial debugging
         #self.history.append(
         if self.logger:
@@ -147,7 +147,7 @@ class GPG(object):
 
         if self.logger:
             self.logger.debug("inputtxt '%s'" % str(inputtxt))
-            
+
         results = gpg.communicate(inputtxt)
         for pipe in (gpg.stdin, gpg.stdout, gpg.stderr):
             if pipe:
