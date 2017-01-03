@@ -25,7 +25,9 @@ ALGORITHM_CODES = {
     '17': 'DSA',     #(sometimes called DH, sign only)
     '18': 'ECDH',
     '19': 'ECDSA',
-    '20': 'ElGamal'  # (sign and encrypt)
+    '20': 'ElGamal',  # (sign and encrypt)
+    '21': 'Diffie-Hellman',
+    '22': 'unknown',
 }
 
 CAPABILITY_MAP = {
