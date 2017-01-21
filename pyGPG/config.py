@@ -9,7 +9,7 @@
 #             an Interface access to gnupg
 #
 # Copyright:
-#             (c) 2012 Brian Dolbec
+#             (c) 2012-2017 Brian Dolbec
 #             Distributed under the terms of the BSD license
 #
 # Author(s):
@@ -78,7 +78,7 @@ class GPGConfig(object):
             'tasks': {}
         }
         self.unsupported = set()
-        self.sub_re = r'\%(.*)'
+        self.sub_re = r'.*\%(.*)'
         self.type_re = re.compile(r'(type)|[< >\']')
 
     def __getitem__(self, key):
@@ -151,10 +151,9 @@ class GPGConfig(object):
         @return: data of the same type
         '''
         data_type = type(data)
-        data_type = re.sub(self.type_re, '', str(data_type))
+        data_type = re.sub(self.type_re, '', str(data_type)).replace('class', '')
         if data_type not in ['dict', 'list', 'str', 'tuple']:
             return data
-
         func = getattr(self, '_sub_%s' % data_type)
         return func(data)
 
