@@ -2,3 +2,7 @@
 *.py[co]
 testpath
 build/
+/.coverage
+/.cache/v/cache/lastfailed
+dist
+htmlcov
