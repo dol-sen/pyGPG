@@ -1,13 +1,29 @@
 #!/usr/bin/env python
 
+import os
 import sys
 
-from distutils.core import setup
+from distutils.core import Command, setup
 from pyGPG import __version__, __license__
 # this affects the names of all the directories we do stuff with
 sys.path.insert(0, './')
 
 #__version__ = os.getenv('VERSION', default='9999')
+
+
+class PyTest(Command):
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+        import sys,subprocess
+        testpath = 'test'
+        covpath = ['--cov=' +  p for p in ['pyGPG']]
+        errno = subprocess.call(['py.test', '-v', testpath] + covpath + ['--cov-report=html', '--cov-report=term'])
+        raise SystemExit(errno)
+
 
 setup(
     name='pyGPG',
@@ -28,4 +44,5 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Security :: Cryptography',
     ],
+    cmdclass={'test': PyTest},
 )
