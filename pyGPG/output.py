@@ -106,14 +106,14 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['long_keyid', 'long_main_keyid']
-        r = self.get_data(fields)
-        if r:
-            return r
-        else:
-            r = self.fingerprint
-            if r is not 'None':
-                return "0x" + r[-16:]
-        return 'None'
+        data = self.get_data(fields)
+        results = []
+        for item in data:
+            if item[2] is not '':
+                results.append(item)
+        if not results:
+            return self.fingerprint
+        return results
 
 
     @property
@@ -132,11 +132,13 @@ class GPGResult(object):
 
         @rtype list: of matching legend class instances found
         '''
-        fields = ['username']
+        fields = ['username', 'user_ID']
         r = self.get_data(fields)
-        if len(r):
-            return r[0][2]
-        return 'None'
+        results = []
+        for item in r:
+            if item[2]:
+                results.append(item)
+        return results
 
 
     @property
@@ -146,12 +148,12 @@ class GPGResult(object):
         @rtype list: of matching legend class instances found
         '''
         fields = ['fingerprint']
-        r = self.get_data(fields, FINGERPRINT_CLASSES)
-        if len(r) > 1:
-            return [x[2] for x in r if x[2]]
-        elif len(r):
-            return r[0][2]
-        return 'None'
+        data = self.get_data(fields, FINGERPRINT_CLASSES)
+        results = []
+        for item in data:
+            if item[2]:
+                results.append(item)
+        return results
 
 
     @property
