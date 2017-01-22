@@ -196,9 +196,9 @@ class GPG(object):
         @rtype list: of options from gpg'''
         if not self._gpg_options or self.config['refetch']:
             self._gpg_options = self.runGPG('dump-options', '')
-        opts = self._gpg_options.output.split("\n")
-        if self.config['only_usable']:
-            return list(set(opts.difference(self.config.unsupported)))
+        opts = [x for x in self._gpg_options.output.split("\n") if x]
+        if self.config.get_key('only_usable'):
+            return list(set(opts).difference(self.config.unsupported))
         return opts
 
 
@@ -222,6 +222,7 @@ class GPG(object):
             result = {}
             for x in data:
                 result[x.name] = x._asdict()
+            return result
         return {'pygpg': data[0].pygpg,
                 'gpg': data[1].gpg,
                 'libcrypt': data[1].libcrypt,
