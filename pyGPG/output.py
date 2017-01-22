@@ -162,8 +162,9 @@ class GPGResult(object):
 
         @rtype int
         '''
-        return self.gpg.returncode
-
+        if self.gpg:
+            return self.gpg.returncode or -1
+        return -1
 
     @property
     def no_pubkey(self):
