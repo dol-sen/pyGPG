@@ -109,7 +109,7 @@ class GPGResult(object):
         data = self.get_data(fields)
         results = []
         for item in data:
-            if item[2] is not '':
+            if item[2]:
                 results.append(item)
         if not results:
             return self.fingerprint
